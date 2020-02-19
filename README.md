@@ -7,7 +7,7 @@ This package provides a visual editor field type for the [Backpack for Laravel](
 
 ## Screenshots
 
-![Backpack Toggle Field Addon](url)
+![Backpack Visual Editor Field Addon](url)
 
 ## Installation
 
