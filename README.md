@@ -40,11 +40,11 @@ If you need to add more custom fields to editor, ...
 
 ## Change log
 
-Please see the [changelog](changelog.md) for more information on what has changed recently.
+Please see the [changelog](CHANGELOG.md) for more information on what has changed recently.
 
 ## Contributing
 
-Please see [contributing.md](contributing.md) for details and a todolist.
+Please see [contributing.md](CONTRIBUTING.MD) for details and a todolist.
 
 ## Security
 
@@ -57,7 +57,7 @@ If you discover any security related issues, please email [the author](composer.
 
 ## License
 
-MIT. Please see the [license file](license.md) for more information.
+MIT. Please see the [license file](LICENSE.MD) for more information.
 
 [ico-version]: https://img.shields.io/packagist/v/digitallyhappy/toggle-field-for-backpack.svg?style=flat-square
 [ico-downloads]: https://img.shields.io/packagist/dt/digitallyhappy/toggle-field-for-backpack.svg?style=flat-square
