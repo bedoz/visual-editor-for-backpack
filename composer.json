@@ -1,0 +1,29 @@
+{
+    "name": "bedoz/visual-editor-for-backpack",
+    "description": "Visual Editor for Backpack Laravel Admin, Visual composer style editor",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Alex Bedendo",
+            "email": "bedozdj@gmail.com",
+            "homepage": "https://alexbedendo.dev"
+        }
+    ],
+    "homepage": "https://github.com/bedoz/visual-editor-for-backpack",
+    "keywords": ["Laravel", "Backpack", "Backpack for Laravel", "Addon", "Admin Panel", "Visual Editor"],
+    "require": {
+        "backpack/crud": "^4.0.41"
+    },
+    "autoload": {
+        "psr-4": {
+            "Bedoz\\VisualEditorForBackpack\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Bedoz\\VisualEditorForBackpack\\AddonServiceProvider"
+            ]
+        }
+    }
+}

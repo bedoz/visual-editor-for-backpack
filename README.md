@@ -26,7 +26,7 @@ $this->crud->addField([
     'name' => 'editor',
     'label' => 'Visual Editor',
     'type' => 'editor',
-    'view_namespace' => 'visual-editor-for-backpack::editor',
+    'view_namespace' => 'visual-editor-for-backpack',
 ]);
 ```
 
