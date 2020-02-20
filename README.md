@@ -98,7 +98,7 @@ MIT. Please see the [license file](LICENSE.md) for more information.
 [ico-version]: https://img.shields.io/packagist/v/digitallyhappy/toggle-field-for-backpack.svg?style=flat-square
 [ico-downloads]: https://img.shields.io/packagist/dt/digitallyhappy/toggle-field-for-backpack.svg?style=flat-square
 
-[link-packagist]: https://packagist.org/packages/digitallyhappy/toggle-field-for-backpack
-[link-downloads]: https://packagist.org/packages/digitallyhappy/toggle-field-for-backpack
+[link-packagist]: 
+[link-downloads]: 
 [link-author]: https://github.com/bedoz
 [link-contributors]: ../../contributors
