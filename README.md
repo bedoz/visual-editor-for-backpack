@@ -95,8 +95,8 @@ If you discover any security related issues, please email [the author](composer.
 
 MIT. Please see the [license file](LICENSE.md) for more information.
 
-[ico-version]: https://img.shields.io/packagist/v/digitallyhappy/toggle-field-for-backpack.svg?style=flat-square
-[ico-downloads]: https://img.shields.io/packagist/dt/digitallyhappy/toggle-field-for-backpack.svg?style=flat-square
+[ico-version]: 
+[ico-downloads]: 
 
 [link-packagist]: 
 [link-downloads]: 
