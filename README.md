@@ -65,7 +65,7 @@ The ```frontend.blade.php``` have everything you need to show result on site
     ```
     Here you can use pushStyle and pushScripts to load your CSS and JS.
 4. Final you must add your class inside ```visual-editor.php``` config file like below:
-    ```BOH
+    ```PHP
    return [
        'blocks' => [
             \Bedoz\VisualEditorForBackpack\Blocks\Slideshow::class,
