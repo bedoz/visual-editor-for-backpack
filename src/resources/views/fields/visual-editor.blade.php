@@ -20,28 +20,7 @@
     <div class="visual-editor-templates">
         {{-- Load available templates --}}
         @foreach(config('visual-editor.blocks') as $block)
-            <div class="row"
-                 data-block="{{ $block }}"
-                 data-block-label="{{ trans("visual-editor-for-backpack::blocks.{$block::$name}.name") }}">
-                <div class="col">
-                    <div class="visual-editor-content">
-                        {!! $block::renderBackend() !!}
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="visual-editor-icons">
-                        <button class="up">
-                            <i class="fa fa-arrow-up"></i>
-                        </button>
-                        <button class="down">
-                            <i class="fa fa-arrow-down"></i>
-                        </button>
-                        <button class="trash">
-                            <i class="fa fa-trash"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
+            @include('visual-editor-for-backpack::interface.block', ['block' => $block, 'crud' => $crud, 'entry' => $entry ?? null])
         @endforeach
     </div>
     <div class="form-row">
@@ -52,15 +31,15 @@
                 </option>
                 @foreach($field['templates'] ?? config('visual-editor.blocks') as $block)
                     <option value="{{ $block }}">
-                        {{ trans("visual-editor-for-backpack::blocks.{$block::$name}.name") }}
+                        {{ trans("visual-editor-for-backpack::blocks/{$block::$name}.name") }}
                     </option>
                 @endforeach
             </select>
         </div>
         <div class="col">
-            <button class="add btn btn-default">
+            <a href="javascript:;" class="add btn btn-default">
                 {{ trans('visual-editor-for-backpack::interface.add_block') }}
-            </button>
+            </a>
         </div>
     </div>
 </div>

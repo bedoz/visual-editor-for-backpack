@@ -24,19 +24,55 @@ Inside your custom CrudController:
 ```php
 $this->crud->addField([
     'name' => 'editor',
-    'label' => 'Visual Editor',
-    'type' => 'editor',
-    'view_namespace' => 'visual-editor-for-backpack',
+    'label' => "Visual Editor",
+    'type' => 'visual-editor',
+    'view_namespace' => 'visual-editor-for-backpack::fields',
 ]);
 ```
 
-Notice the ```view_namespace``` attribute - make sure that is exactly as above, to tell Backpack to load the field from this _addon package_, instead of assuming it's inside the _Backpack\CRUD package_.
+Notice the ```view_namespace``` attribute - make sure that is exactly as above, to tell Backpack to load the field from this package, instead of assuming it's inside the _Backpack\CRUD package_.
 
 
-## Overwriting
+## Extending
 
-If you need to add more custom fields to editor, ...
-
+If you need to add more custom fields to editor, you need to follow these steps.
+1. Create views<br>
+    You need to create 2 files, ```backend.blade.php``` and ```frontend.blade.php``` within a subfolder on ```views/vendor/visual-editor-for-backpack/blocks```.<br>
+Example: ```views/vendor/visual-editor-for-backpack/blocks/newField/backend.blade.php``` and ```views/vendor/visual-editor-for-backpack/blocks/newField/frontend.blade.php```<br/>
+The ```backend.blade.php``` have everything you need to manage admin input<br>
+The ```frontend.blade.php``` have everything you need to show result on site
+2. If you have some translations to load into your field create a file inside ```resources/lang/vendor/visual-editor-for-backpack/LANG/blocks``` with the name of the field like ```resources/lang/vendor/visual-editor-for-backpack/LANG/blocks/newField.php```, remember to create a new file for every language you use
+3. Create a new class with the name of you field in ```app/Blocks``` like ```app/Blocks/NewField.php```
+    start with something like:
+    ```php
+    <?php
+    namespace app\Blocks;
+    
+    use Bedoz\VisualEditorForBackpack\Blocks\Block;
+    
+    class Newfield extends Block {
+      public static $name = 'newField';
+      public static $label = 'New Field Label';
+    
+      static public function pushStyle() {
+          return "";
+      }
+    
+      static public function pushScripts() {
+          return "";
+      }
+    }
+    ```
+    Here you can use pushStyle and pushScripts to load your CSS and JS.
+4. Final you must add your class inside ```visual-editor.php``` config file like below:
+    ```BOH
+   return [
+       'blocks' => [
+            \Bedoz\VisualEditorForBackpack\Blocks\Slideshow::class,
+    ++      \App\Blocks\Newfield::class,
+       ],
+   ];
+   ```
 
 ## Change log
 
@@ -52,7 +88,7 @@ If you discover any security related issues, please email [the author](composer.
 
 ## Credits
 
-- [Bedoz][link-author] - creator of this editor;
+- [Bedoz][link-author] - creator of this package;
 - [All Contributors][link-contributors]
 
 ## License
