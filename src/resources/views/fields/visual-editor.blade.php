@@ -55,13 +55,16 @@
 
     {{-- FIELD CSS - will be loaded in the after_styles section --}}
     @push('crud_fields_styles')
-        <style type="text/css">
-
-        </style>
+        @foreach(config('visual-editor.blocks') as $block)
+            {!! $block::pushStyle() !!}
+        @endforeach
     @endpush
 
     {{-- FIELD JS - will be loaded in the after_scripts section --}}
     @push('crud_fields_scripts')
+        @foreach(config('visual-editor.blocks') as $block)
+            {!! $block::pushScripts() !!}
+        @endforeach
         <script>
             function bpFieldInitToggleElement(element) {
                 // element will be a jQuery wrapped DOM node
