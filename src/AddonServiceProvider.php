@@ -37,8 +37,8 @@ class AddonServiceProvider extends ServiceProvider
             'visual-editor'
         );
 
-        /*$this->loadRoutesFrom(
+        $this->loadRoutesFrom(
             realpath(__DIR__.'/routes/visual-editor.php')
-        );*/
+        );
     }
 }

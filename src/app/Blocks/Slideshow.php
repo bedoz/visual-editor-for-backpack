@@ -5,10 +5,11 @@ namespace Bedoz\VisualEditorForBackpack\Blocks;
 class Slideshow extends Block {
     public static $name = 'slideshow';
     public static $label = 'Slideshow';
+    public static $hint = 'Hint';
 
     static public function pushStyle() {
         ?>
-        <link href="{{ asset('vendor/backpack/cropper/dist/cropper.min.css') }}" rel="stylesheet" type="text/css" />
+        <link href="<?php echo asset('packages/cropperjs/dist/cropper.min.css'); ?>" rel="stylesheet" type="text/css" />
         <style>
             .hide {
                 display: none;
@@ -68,8 +69,8 @@ class Slideshow extends Block {
 
     static public function pushScripts() {
         ?>
-        <script src="{{ asset('vendor/backpack/cropper/dist/cropper.min.js') }}"></script>
-        <script src="{{ asset('vendor/backpack/bootstrap-html5sortable/jquery.sortable.min.js') }}"></script>
+        <script src="<?php echo asset('packages/cropperjs/dist/cropper.min.js'); ?>"></script>
+        <!--<script src="--><?php //echo asset('packages/bootstrap-html5sortable/jquery.sortable.min.js'); ?><!--"></script>-->
         <script>
             jQuery(document).ready(function($) {
                 $(".file-clear-button").click(function(e) {
@@ -82,7 +83,7 @@ class Slideshow extends Block {
                     if ($.trim(container.html())=='') {
                         container.remove();
                     }
-                    $("<input type='hidden' name='clear_{{ $field['name'] }}[]' value='"+$(this).data('filename')+"'>").insertAfter("#{{ $field['name'] }}_file_input");
+                    $("<input type='hidden' name='clear_slideshow[]' value='"+$(this).data('filename')+"'>").insertAfter("#slideshow_file_input");
                 });
                 // Loop through all instances of the image field
                 $('.form-group.gallery').each(function(index){
@@ -149,13 +150,13 @@ class Slideshow extends Block {
                                         imageData['sizes'][$ratioButtons.val()]['image'] = folder + $ratioButtons.val() + "_" + filename;
                                         $currentImage.data("gallery-data",imageData).attr("data-gallery-data", JSON.stringify(imageData));
                                         $.ajax({
-                                            url: "{{route('fields.gallery.crop')}}",
+                                            url: "<?php echo route('fields.slideshow.crop'); ?>",
                                             method: 'POST',
                                             data: {
-                                                '_token': '{{ csrf_token() }}',
-                                                'model': '{{addslashes(get_class($entry))}}',
-                                                'id': '{{$entry->id}}',
-                                                'field': '{{$field['name']}}',
+                                                '_token': '<?php echo csrf_token(); ?>',
+                                                'model': 'Slideshow',
+                                                'id': '', //id elemento
+                                                'field': 'slideshow',
                                                 'value': $edit.closest(".file-preview").parent().find("[data-gallery-data]").map(function(){return $(this).data('gallery-data');}).get()
                                             },
                                             success: function () {
@@ -169,11 +170,11 @@ class Slideshow extends Block {
                                         $mainImage.cropper('getCroppedCanvas').toBlob(function (blob) {
                                             var formData = new FormData();
                                             formData.append('croppedImage', blob);
-                                            formData.append('_token', '{{ csrf_token() }}');
+                                            formData.append('_token', '<?php echo csrf_token(); ?>');
                                             formData.append('filename', imageData.image);
                                             formData.append('size', $ratioButtons.val());
                                             $.ajax({
-                                                url: '{{route('fields.gallery.saveCroppedImage')}}',
+                                                url: '<?php echo route('fields.slideshow.saveImage'); ?>',
                                                 method: "POST",
                                                 data: formData,
                                                 processData: false,
@@ -190,7 +191,7 @@ class Slideshow extends Block {
                                                         $tagliDisponibili.find(".taglio:last").attr("data-taglio", $ratioButtons.val()).data("taglio", $ratioButtons.val());
                                                     }
                                                     d = new Date();
-                                                    $tagliDisponibili.find("[data-taglio="+$ratioButtons.val()+"]").find("img").attr("src", "{{\Storage::disk("uploads")->url("")}}"+data+"?"+d.getTime());
+                                                    $tagliDisponibili.find("[data-taglio="+$ratioButtons.val()+"]").find("img").attr("src", "<?php echo \Storage::disk("public")->url(""); ?>"+data+"?"+d.getTime());
                                                 }
                                             });
                                         });
@@ -227,20 +228,20 @@ class Slideshow extends Block {
                                             .show()
                                             .appendTo($tagliDisponibili.children(".row"));
                                             $tagliDisponibili.find(".taglio:last").find(".titolo").text(key);
-                                            $tagliDisponibili.find(".taglio:last").find("img").attr("src","{{\Storage::disk("uploads")->url("")}}"+filename+"?"+d.getTime());
+                                            $tagliDisponibili.find(".taglio:last").find("img").attr("src","<?php echo \Storage::disk("public")->url(""); ?>"+filename+"?"+d.getTime());
                                             $tagliDisponibili.find(".taglio:last").attr("data-taglio", key).data("taglio", key);
                                         });
                                     }
                                     $tagliDisponibili.on("click", ".cancella_miniatura", function(){
                                         var $this = $(this);
                                         $.ajax({
-                                            url: "{{route('fields.gallery.deleteCroppedImage')}}",
+                                            url: "<?php echo route('fields.slideshow.deleteImage'); ?>",
                                             method: 'POST',
                                             data: {
-                                                '_token': '{{ csrf_token() }}',
-                                                'model': '{{addslashes(get_class($entry))}}',
-                                                'id': '{{$entry->id}}',
-                                                'field': '{{$field['name']}}',
+                                                '_token': '<?php echo csrf_token(); ?>',
+                                                'model': 'Slideshow',
+                                                'id': '', //id elemento
+                                                'field': 'slideshow',
                                                 'image': imageData.image,
                                                 'delete': $(this).closest("[data-taglio]").data("taglio")
                                             },
@@ -272,13 +273,13 @@ class Slideshow extends Block {
                     placeholderClass: 'col-sm-3'
                 }).bind('sortupdate', function(e, ui) {
                     $.ajax({
-                        url: "{{route('fields.gallery.order')}}",
+                        url: "<?php echo route('fields.slideshow.order'); ?>",
                         method: 'POST',
                         data: {
-                            '_token': '{{ csrf_token() }}',
-                            'model': '{{addslashes(get_class($entry))}}',
-                            'id': '{{$entry->id}}',
-                            'field': '{{$field['name']}}',
+                            '_token': '<?php echo csrf_token(); ?>',
+                            'model': 'Slideshow',
+                            'id': '', //id elemento
+                            'field': 'slideshow',
                             'value': $(ui.item).parent().find("[data-gallery-data]").map(function(){return $(this).data('gallery-data');}).get()
                         },
                         success: function () {
