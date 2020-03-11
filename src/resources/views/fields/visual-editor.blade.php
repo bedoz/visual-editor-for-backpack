@@ -30,7 +30,7 @@
                     {{ trans('visual-editor-for-backpack::interface.choose_a_block') }}
                 </option>
                 @foreach($field['templates'] ?? config('visual-editor.blocks') as $block)
-                    <option value="{{ str_replace("\\", "_", $block) }}">
+                    <option value="{{ $block::classSlug() }}">
                         {{ trans("visual-editor-for-backpack::blocks/{$block::$name}.name") }}
                     </option>
                 @endforeach
@@ -79,6 +79,10 @@
                     let element = $("div.visual-editor-templates").children("[data-block='" + block + "']").clone();
                     element.appendTo("div.visual-editor-rows");
                     window[block](element);
+                });
+
+                $("div.visual-editor-rows").on("click", "div.visual-editor-icons a.trash", function () {
+                    $(this).closest("[data-block]").remove();
                 });
             });
         </script>

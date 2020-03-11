@@ -77,7 +77,7 @@
         type="file"
         accept="image/*"
         id="slideshow_file_input"
-        name="slideshow[]"
+        name="VEBlockName"
         class="form-control"
         multiple
     >

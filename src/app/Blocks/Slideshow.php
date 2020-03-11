@@ -79,8 +79,10 @@ class Slideshow extends Block {
         ?>
         <script src="<?php echo asset('packages/cropperjs/dist/cropper.min.js'); ?>"></script>
         <script>
-            jQuery(document).ready(function($) {
-                $(".file-clear-button").click(function(e) {
+            this['<?php echo self::classSlug(); ?>'] = function (element) {
+                element.find('input[name=VEBlockName]').attr("name", "<?php echo self::fieldName(); ?>");
+
+                element.find(".file-clear-button").click(function(e) {
                     e.preventDefault();
                     var container = $(this).closest(".sortable");
                     var parent = $(this).closest(".file-preview");
@@ -92,8 +94,8 @@ class Slideshow extends Block {
                     }
                     $("<input type='hidden' name='clear_slideshow[]' value='"+$(this).data('filename')+"'>").insertAfter("#slideshow_file_input");
                 });
-                // Loop through all instances of the image field
-                $('div[data-block="<?php echo addslashes(addslashes(self::class)); ?>"]').each(function(index){
+
+                element.find("div[data-preview]").each(function () {
                     // Options either global for all image type fields, or use 'data-*' elements for options passed in via the CRUD controller
                     var options = {
                         viewMode: 2,
@@ -274,31 +276,31 @@ class Slideshow extends Block {
                         };
                         xhttp.send();
                     });
-                });
 
-                /*$('.sortable').sortable({
-                    placeholderClass: 'col-sm-3'
-                }).bind('sortupdate', function(e, ui) {
-                    $.ajax({
-                        url: "<?php echo route('fields.slideshow.order'); ?>",
-                        method: 'POST',
-                        data: {
-                            '_token': '<?php echo csrf_token(); ?>',
-                            'model': 'Slideshow',
-                            'id': '', //id elemento
-                            'field': 'slideshow',
-                            'value': $(ui.item).parent().find("[data-gallery-data]").map(function(){return $(this).data('gallery-data');}).get()
-                        },
-                        success: function () {
-                            new PNotify({
-                                title: "Ordine Salvato",
-                                text: "L'ordine corrente è stato salvato",
-                                type: "success"
-                            });
-                        }
-                    });
-                });*/
-            });
+                    /*$('.sortable').sortable({
+                        placeholderClass: 'col-sm-3'
+                    }).bind('sortupdate', function(e, ui) {
+                        $.ajax({
+                            url: "<?php echo route('fields.slideshow.order'); ?>",
+                            method: 'POST',
+                            data: {
+                                '_token': '<?php echo csrf_token(); ?>',
+                                'model': 'Slideshow',
+                                'id': '', //id elemento
+                                'field': 'slideshow',
+                                'value': $(ui.item).parent().find("[data-gallery-data]").map(function(){return $(this).data('gallery-data');}).get()
+                            },
+                            success: function () {
+                                new PNotify({
+                                    title: "Ordine Salvato",
+                                    text: "L'ordine corrente è stato salvato",
+                                    type: "success"
+                                });
+                            }
+                        });
+                    });*/
+                });
+            }
         </script>
         <?php
     }

@@ -3,7 +3,7 @@
 </div>
 <textarea
     class="form-control"
-    name="text[]"
+    name="VEBlockName"
 ></textarea>
 {{-- HINT --}}
 @if (isset($class::$hint))

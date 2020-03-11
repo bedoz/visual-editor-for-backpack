@@ -5,7 +5,6 @@ namespace Bedoz\VisualEditorForBackpack\Blocks;
 class Text extends Block {
     public static $name = 'text';
     public static $label = 'Text';
-    public static $hint = '';
 
     static public function pushStyle() {
         ?>
@@ -18,7 +17,9 @@ class Text extends Block {
         <script src="<?php echo asset('packages/ckeditor/ckeditor.js'); ?>"></script>
         <script src="<?php echo asset('packages/ckeditor/adapters/jquery.js'); ?>"></script>
         <script>
-            this['<?php echo str_replace("\\", "_", self::class); ?>'] = function (element) {
+            this['<?php echo self::classSlug(); ?>'] = function (element) {
+                element.find('textarea[name=VEBlockName]').attr("name", "<?php echo self::fieldName(); ?>");
+
                 element.find('textarea').ckeditor({
                     "filebrowserBrowseUrl": "<?php echo url(config('backpack.base.route_prefix').'/elfinder/ckeditor'); ?>",
                     "extraPlugins" : 'embed,widget',
