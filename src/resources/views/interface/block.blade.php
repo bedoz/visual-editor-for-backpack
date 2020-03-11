@@ -1,12 +1,12 @@
 <div class="row"
-     data-block="{{ $block }}"
-     data-block-label="{{ trans("visual-editor-for-backpack::blocks.{$block::$name}.name") }}">
+     data-block="{{ str_replace("\\", "_", $block) }}"
+     data-block-label="{{ trans("visual-editor-for-backpack::blocks/{$block::$name}.name") }}">
     <div class="col">
         <div class="visual-editor-content">
             {!! $block::renderBackend($crud, $entry) !!}
         </div>
     </div>
-    <div class="col-auto">
+    <div class="col-auto d-flex align-items-center">
         <div class="visual-editor-icons">
             <a href="javascript:;" class="up btn btn-primary">
                 <i class="fa fa-arrow-up"></i>

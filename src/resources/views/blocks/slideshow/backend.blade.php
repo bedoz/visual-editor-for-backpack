@@ -24,56 +24,54 @@
             </div>
         @endif
     </div>
-    @if(isset($field['crop']) && $field['crop'])
-        <div class="row" id="bottoni_crop" style="display: none;">
-            <div class="col-sm-6" style="margin-bottom: 20px;">
-                <img id="mainImage" src="">
-            </div>
-            <div class="col-sm-6">
-                <div class="row" id="dettaglioTaglio">
-                    <div class="col-sm-12" style="padding-bottom: 10px;">
-                        <div class="btn-group">
-                            <button class="btn btn-success" id="save" type="button"><i class="fa fa-save"></i></button>
-                            <button class="btn btn-default" id="rotateLeft" type="button"><i class="fa fa-rotate-left"></i></button>
-                            <button class="btn btn-default" id="rotateRight" type="button"><i class="fa fa-rotate-right"></i></button>
-                            <button class="btn btn-default" id="zoomIn" type="button"><i class="fa fa-search-plus"></i></button>
-                            <button class="btn btn-default" id="zoomOut" type="button"><i class="fa fa-search-minus"></i></button>
-                            <button class="btn btn-warning" id="reset" type="button"><i class="fa fa-undo"></i></button>
-                            <button class="btn btn-danger" id="remove" type="button"><i class="fa fa-times"></i></button>
-                        </div>
-                    </div>
-                    <div class="col-sm-12" style="padding-bottom: 10px;" id="aspectRatio">
-                        <div>Proporzione:</div>
-                        <select>
-                            <option selected disabled hidden>Seleziona proporzione</option>
-                            @foreach(config('busforfun.immagini') as $titolo => $data)
-                                <option value="{{$titolo}}" data-ratio="{{$data['ratio']}}">{{$titolo}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="docs-preview col-sm-12">
-                        <div class="img-preview preview-lg">
-                            <img src="" style="display: block; min-width: 0 !important; min-height: 0 !important; max-width: none !important; max-height: none !important; margin-left: -32.875px; margin-top: -18.4922px; transform: none;">
-                        </div>
+    <div class="row" id="bottoni_crop" style="display: none;">
+        <div class="col-sm-6" style="margin-bottom: 20px;">
+            <img id="mainImage" src="">
+        </div>
+        <div class="col-sm-6">
+            <div class="row" id="dettaglioTaglio">
+                <div class="col-sm-12" style="padding-bottom: 10px;">
+                    <div class="btn-group">
+                        <button class="btn btn-success" id="save" type="button"><i class="fa fa-save"></i></button>
+                        <button class="btn btn-default" id="rotateLeft" type="button"><i class="fa fa-rotate-left"></i></button>
+                        <button class="btn btn-default" id="rotateRight" type="button"><i class="fa fa-rotate-right"></i></button>
+                        <button class="btn btn-default" id="zoomIn" type="button"><i class="fa fa-search-plus"></i></button>
+                        <button class="btn btn-default" id="zoomOut" type="button"><i class="fa fa-search-minus"></i></button>
+                        <button class="btn btn-warning" id="reset" type="button"><i class="fa fa-undo"></i></button>
+                        <button class="btn btn-danger" id="remove" type="button"><i class="fa fa-times"></i></button>
                     </div>
                 </div>
-            </div>
-            <div class="col-sm-12" id="tagliDisponibili">
-                <div class="row">
-                    <div class="col-sm-2 taglio" id="sample" style="display: none;">
-                        <div class="titolo"></div>
-                        <img src="">
-                        <a href="javascript:;" class="btn btn-danger btn-xs pull-right cancella_miniatura" title="Delete cut"><i class="fa fa-remove"></i></a>
-                        <div class="clearfix"></div>
+                <div class="col-sm-12" style="padding-bottom: 10px;" id="aspectRatio">
+                    <div>Proporzione:</div>
+                    <select>
+                        <option selected disabled hidden>Seleziona proporzione</option>
+                        @foreach($class::$sizes as $titolo => $data)
+                            <option value="{{$titolo}}" data-ratio="{{$data['ratio']}}">{{$titolo}}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="docs-preview col-sm-12">
+                    <div class="img-preview preview-lg">
+                        <img src="" style="display: block; min-width: 0 !important; min-height: 0 !important; max-width: none !important; max-height: none !important; margin-left: -32.875px; margin-top: -18.4922px; transform: none;">
                     </div>
                 </div>
             </div>
         </div>
-    @endif
+        <div class="col-sm-12" id="tagliDisponibili">
+            <div class="row">
+                <div class="col-sm-2 taglio" id="sample" style="display: none;">
+                    <div class="titolo"></div>
+                    <img src="">
+                    <a href="javascript:;" class="btn btn-danger btn-xs pull-right cancella_miniatura" title="Delete cut"><i class="fa fa-remove"></i></a>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- upload multiple input -->
-<div class="galleryMultipleUpload form-group col-md-12">
+<div class="galleryMultipleUpload">
     <label>Carica Immagini</label>
     <input
         type="file"

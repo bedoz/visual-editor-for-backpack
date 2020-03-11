@@ -17,7 +17,7 @@
 
     <div class="visual-editor-rows"></div>
 
-    <div class="visual-editor-templates">
+    <div class="visual-editor-templates" style="display: none;">
         {{-- Load available templates --}}
         @foreach(config('visual-editor.blocks') as $block)
             @include('visual-editor-for-backpack::interface.block', ['block' => $block, 'crud' => $crud, 'entry' => $entry ?? null])
@@ -25,19 +25,19 @@
     </div>
     <div class="form-row">
         <div class="col">
-            <select name="templates" class="form-control">
+            <select name="visual_editor_templates" class="form-control">
                 <option value="" disabled selected>
                     {{ trans('visual-editor-for-backpack::interface.choose_a_block') }}
                 </option>
                 @foreach($field['templates'] ?? config('visual-editor.blocks') as $block)
-                    <option value="{{ $block }}">
+                    <option value="{{ str_replace("\\", "_", $block) }}">
                         {{ trans("visual-editor-for-backpack::blocks/{$block::$name}.name") }}
                     </option>
                 @endforeach
             </select>
         </div>
         <div class="col">
-            <a href="javascript:;" class="add btn btn-default">
+            <a href="javascript:;" class="add btn btn-default" id="visual_editor_add_block_button">
                 {{ trans('visual-editor-for-backpack::interface.add_block') }}
             </a>
         </div>
@@ -66,10 +66,21 @@
             {!! $block::pushScripts() !!}
         @endforeach
         <script>
-            function bpFieldInitToggleElement(element) {
-                // element will be a jQuery wrapped DOM node
-
-            }
+            $(document).ready(function () {
+                $("#visual_editor_add_block_button").click(function () {
+                    let block = $("select[name=visual_editor_templates]").val()
+                    if (block == null) {
+                        new Noty({
+                            type: "error",
+                            text: '{{ trans('visual-editor-for-backpack::interface.select_al_least_one_block') }}',
+                        }).show();
+                        return false;
+                    }
+                    let element = $("div.visual-editor-templates").children("[data-block='" + block + "']").clone();
+                    element.appendTo("div.visual-editor-rows");
+                    window[block](element);
+                });
+            });
         </script>
     @endpush
 

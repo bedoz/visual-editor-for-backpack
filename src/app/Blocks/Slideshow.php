@@ -6,6 +6,14 @@ class Slideshow extends Block {
     public static $name = 'slideshow';
     public static $label = 'Slideshow';
     public static $hint = 'Hint';
+    public static $sizes = [
+        'quadrata' => [
+            'ratio' => 1,
+        ],
+        'facebook' => [
+            'ratio' => 2,
+        ],
+    ];
 
     static public function pushStyle() {
         ?>
@@ -70,7 +78,6 @@ class Slideshow extends Block {
     static public function pushScripts() {
         ?>
         <script src="<?php echo asset('packages/cropperjs/dist/cropper.min.js'); ?>"></script>
-        <!--<script src="--><?php //echo asset('packages/bootstrap-html5sortable/jquery.sortable.min.js'); ?><!--"></script>-->
         <script>
             jQuery(document).ready(function($) {
                 $(".file-clear-button").click(function(e) {
@@ -86,7 +93,7 @@ class Slideshow extends Block {
                     $("<input type='hidden' name='clear_slideshow[]' value='"+$(this).data('filename')+"'>").insertAfter("#slideshow_file_input");
                 });
                 // Loop through all instances of the image field
-                $('.form-group.gallery').each(function(index){
+                $('div[data-block="<?php echo addslashes(addslashes(self::class)); ?>"]').each(function(index){
                     // Options either global for all image type fields, or use 'data-*' elements for options passed in via the CRUD controller
                     var options = {
                         viewMode: 2,
@@ -269,7 +276,7 @@ class Slideshow extends Block {
                     });
                 });
 
-                $('.sortable').sortable({
+                /*$('.sortable').sortable({
                     placeholderClass: 'col-sm-3'
                 }).bind('sortupdate', function(e, ui) {
                     $.ajax({
@@ -290,7 +297,7 @@ class Slideshow extends Block {
                             });
                         }
                     });
-                });
+                });*/
             });
         </script>
         <?php
