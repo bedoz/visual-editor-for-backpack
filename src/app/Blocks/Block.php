@@ -37,6 +37,6 @@ abstract class Block {
     }
 
     static public function fieldName() {
-        return self::classSlug() . "_" . str_random(5);
+        return self::classSlug() . "_" . str_random(10);
     }
 }
