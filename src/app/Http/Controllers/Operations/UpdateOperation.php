@@ -9,7 +9,21 @@ trait UpdateOperation
     public function update() {
         // do something before validation, before save, before everything
         $response = $this->originalUpdate();
-        dd(request()->all());
+        $fields = collect(request()->all());
+        $fields = $fields->filter(function($value, $key) {
+            if (strpos($key, "Bedoz_VisualEditorForBackpack_Blocks_") !== false) {
+                return true;
+            }
+            return false;
+        })->toArray();
+        $field = collect($this->crud->settings()['update.fields'])->filter(function($value, $key) {
+            if ($value['type'] == 'visual-editor') {
+                return true;
+            }
+            return false;
+        })->keys()->first();
+        $this->crud->entry->{$field} = $fields;
+        $this->crud->entry->save();
         // do something after save
         return $response;
     }
