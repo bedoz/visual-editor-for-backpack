@@ -7,8 +7,8 @@
 >
     <!-- Wrap the image or canvas element with a block element (container) -->
     <div class="row sortable">
-        @if (isset($field['value']) && count($field['value']))
-            @foreach($field['value'] as $key => $file_path)
+        @if (isset($value) && is_array($value) && count($value))
+            @foreach($value as $key => $file_path)
                 <div class="file-preview col-sm-3" style="margin-bottom: 20px;" data-gallery-data="{{htmlentities(json_encode($file_path))}}">
                     <img src="{{asset(\Storage::disk($field['disk'])->url($file_path['image']))}}">
                     <div class="btn-group pull-right">
@@ -77,7 +77,7 @@
         type="file"
         accept="image/*"
         id="slideshow_file_input"
-        name="VEBlockName"
+        name="{{$id}}"
         class="form-control"
         multiple
     >

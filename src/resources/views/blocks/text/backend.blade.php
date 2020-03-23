@@ -3,8 +3,8 @@
 </div>
 <textarea
     class="form-control"
-    name="VEBlockName"
-></textarea>
+    name="{{$id}}"
+>{!! $value !!}</textarea>
 {{-- HINT --}}
 @if (isset($class::$hint))
     <p class="help-block">{!! $class::$hint !!}</p>

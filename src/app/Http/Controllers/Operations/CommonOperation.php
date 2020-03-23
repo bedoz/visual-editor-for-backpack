@@ -5,9 +5,9 @@ namespace Bedoz\VisualEditorForBackpack\app\Http\Controllers\Operations;
 trait CommonOperation
 {
     public function saveFields() {
-        $fields = collect(request()->all());
-        $fields = $fields->filter(function($value, $key) {
-            if (strpos($key, "Bedoz_VisualEditorForBackpack_Blocks_") !== false) {
+        $values = collect(request()->all());
+        $values = $values->filter(function($value, $key) {
+            if (strpos($key, "Bedoz_VisualEditorForBackpack_app_Blocks_") !== false) {
                 return true;
             }
             return false;
@@ -18,7 +18,11 @@ trait CommonOperation
             }
             return false;
         })->keys()->first();
-        $this->crud->entry->{$field} = $fields;
+        if ($this->crud->entry->isTranslatableAttribute($field)) { // the attribute is translatable
+            $this->crud->entry->setTranslation($field, $this->crud->entry->locale, $values);
+        } else { // the attribute is NOT translatable
+            $this->crud->entry->{$field} = $values;
+        }
         $this->crud->entry->save();
     }
 }

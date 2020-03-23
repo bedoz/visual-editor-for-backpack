@@ -15,12 +15,27 @@
         </p>
     @endif
 
-    <div class="visual-editor-rows"></div>
+    <div class="visual-editor-rows">
+        @if($entry)
+            @php
+                $fields = json_decode($entry->{$field['name']});
+            @endphp
+            @foreach($fields as $name => $value)
+                @php
+                    $id = $name;
+                    $name = explode("_", $name);
+                    array_pop($name);
+                    $name = implode("\\", $name);
+                @endphp
+                @include('visual-editor-for-backpack::interface.block', ['block' => $name, 'crud' => $crud, 'entry' => $entry, 'id' => $id, 'value' => $value])
+            @endforeach
+        @endif
+    </div>
 
     <div class="visual-editor-templates" style="display: none;">
         {{-- Load available templates --}}
         @foreach(config('visual-editor.blocks') as $block)
-            @include('visual-editor-for-backpack::interface.block', ['block' => $block, 'crud' => $crud, 'entry' => $entry ?? null])
+            @include('visual-editor-for-backpack::interface.block', ['block' => $block, 'crud' => $crud, 'entry' => $entry ?? null, 'id' => null, 'value' => null])
         @endforeach
     </div>
     <div class="form-row">
@@ -79,6 +94,10 @@
                     let element = $("div.visual-editor-templates").children("[data-block='" + block + "']").clone();
                     element.appendTo("div.visual-editor-rows");
                     window[block](element);
+                });
+
+                $("div.visual-editor-rows > [data-block]").each(function (index) {
+                    window[$(this).data("block")]($(this));
                 });
 
                 $("div.visual-editor-rows").on("click", "div.visual-editor-icons a.trash", function () {

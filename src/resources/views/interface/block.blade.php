@@ -3,7 +3,7 @@
      data-block-label="{{ trans("visual-editor-for-backpack::blocks/{$block::$name}.name") }}">
     <div class="col">
         <div class="visual-editor-content">
-            {!! $block::renderBackend($crud, $entry) !!}
+            {!! $block::renderBackend($crud, $entry, $id ?? 'VEBlockName', $value ?? '') !!}
         </div>
     </div>
     <div class="col-auto d-flex align-items-center">

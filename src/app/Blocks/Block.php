@@ -8,9 +8,9 @@ abstract class Block {
     public static $label = '';
     public static $hint = '';
 
-    static public function renderBackend($crud, $entry) {
+    static public function renderBackend($crud, $entry, $id = 'VEBlockName', $value = '') {
         $class = get_called_class();
-        return view('visual-editor-for-backpack::blocks.'.$class::$name.'.backend', compact('class', 'crud', 'entry'));
+        return view('visual-editor-for-backpack::blocks.'.$class::$name.'.backend', compact('class', 'crud', 'entry', 'id', 'value'));
     }
 
     static public function renderFrontend() {
