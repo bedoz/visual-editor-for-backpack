@@ -1,6 +1,6 @@
 <?php
 
-namespace Bedoz\VisualEditorForBackpack\Blocks;
+namespace Bedoz\VisualEditorForBackpack\app\Blocks;
 
 class Text extends Block {
     public static $name = 'text';

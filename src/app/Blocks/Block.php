@@ -1,6 +1,6 @@
 <?php
 
-namespace Bedoz\VisualEditorForBackpack\Blocks;
+namespace Bedoz\VisualEditorForBackpack\app\Blocks;
 
 abstract class Block {
     static public $name = '';

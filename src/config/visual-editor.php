@@ -1,8 +1,11 @@
 <?php
 
+use Bedoz\VisualEditorForBackpack\app\Blocks\Slideshow;
+use Bedoz\VisualEditorForBackpack\app\Blocks\Text;
+
 return [
     'blocks' => [
-        \Bedoz\VisualEditorForBackpack\Blocks\Slideshow::class,
-        \Bedoz\VisualEditorForBackpack\Blocks\Text::class,
+        Slideshow::class,
+        Text::class,
     ],
 ];
