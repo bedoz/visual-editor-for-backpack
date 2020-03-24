@@ -1,5 +1,5 @@
 <?php
-namespace App\Http\Controllers\Fields;
+namespace Bedoz\VisualEditorForBackpack\app\Http\Controllers\Fields;
 
 use Illuminate\Routing\Controller;
 use Illuminate\Database\Eloquent\Collection;
@@ -9,41 +9,42 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Response;
 
 class SlideshowController extends Controller {
-    
-    function gmapsRegion(Request $request) {
-        Validator::extend('geo_nazione', function ($attribute, $value, $parameters, $validator) {
-            return !is_null(\App\Models\World::getNazioneByISO2($value));
-        });
+
+    function saveImage(Request $request) {
         $validator = Validator::make($request->all(), [
-            'nazione' => 'required|geo_nazione'
+            'file' => 'required|image',
         ]);
+
         if ($validator->fails()) {
-            return response($validator->errors()->get('nazione'), 400);
+            $errors = $validator->errors();
+            return Response::json([
+                'error' => 'wrong values',
+                'error_description' => 'One or more fields has wrong values, please check it before send request.',
+                'fields' => $errors->all()
+            ], 400);
         }
-        
-        $regioni = \App\Models\World::getRegioni(Input::get('nazione'));
-        
-        return [
-            'regioni' => $regioni
-        ];
-    }
-    
-    function gmapsProvince(Request $request) {
-        Validator::extend('geo_regione', function ($attribute, $value, $parameters, $validator) {
-            return !is_null(\App\Models\World::getRegioneByCode($value));
-        });
-        $validator = Validator::make($request->all(), [
-            'regione' => 'required|geo_regione'
-        ]);
-        if ($validator->fails()) {
-            return response($validator->errors()->get('regione'), 400);
+
+        if ($request->file("file")->isValid()) {
+            $file = $request->file("file");
+
+            $filename = $file->getClientOriginalName();
+            $disk = "public";
+            $destination_path = "VisualEditor";
+
+            $mime = $file->getClientMimeType();
+            switch ($mime) {
+                case "image/png": $extension = "png"; break;
+                case "image/jpg": $extension = "jpg"; break;
+                case "image/jpeg": $extension = "jpg"; break;
+                case "image/svg+xml": $extension = "svg"; break;
+            }
+
+            $filename = md5($filename.time()).'.'.$extension;
+
+            return $file->storeAs($destination_path, $filename, $disk);
         }
-        
-        $province = \App\Models\World::getProvince(Input::get('regione'));
-        
-        return [
-            'province' => $province
-        ];
+
+        return false;
     }
     
     function order(Request $request) {
@@ -93,7 +94,7 @@ class SlideshowController extends Controller {
         return $this->galleryOrder($request);
     }
     
-    function saveImage(Request $request) {
+    function saveCrop(Request $request) {
         $validator = Validator::make($request->all(), [
             'croppedImage' => 'required|image',
             'filename' => 'required|string',

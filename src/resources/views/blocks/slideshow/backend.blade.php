@@ -73,11 +73,11 @@
 <!-- upload multiple input -->
 <div class="galleryMultipleUpload">
     <label>Carica Immagini</label>
+    <input type="hidden" name="{{$id}}" value="{!! $value !!}">
     <input
         type="file"
         accept="image/*"
         id="slideshow_file_input"
-        name="{{$id}}"
         class="form-control"
         multiple
     >

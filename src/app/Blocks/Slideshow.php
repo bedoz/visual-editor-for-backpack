@@ -82,6 +82,30 @@ class Slideshow extends Block {
             this['<?php echo self::classSlug(); ?>'] = function (element) {
                 element.find('input[name=VEBlockName]').attr("name", "<?php echo self::fieldName(); ?>");
 
+                element.find("#slideshow_file_input").change(function(){
+                    let files = $(this)[0].files;
+                    for (var i = 0; i < files.length; i++) {
+                        if (/^image\/\w+$/.test(files[i].type)) {
+                            //upload files e aggiunta al box
+                            var formData = new FormData();
+                            formData.append("file", files[i]);
+                            formData.append("_token", "<?php echo csrf_token(); ?>");
+
+                            var xhttp = new XMLHttpRequest();
+                            xhttp.open('POST', "<?php echo route('fields.slideshow.saveImage'); ?>", true);
+                            xhttp.addEventListener('progress', function(e){});
+                            xhttp.addEventListener('load', function(e) {
+                                if (e.target.status == 200) {
+                                    alert("Uploaded!");
+                                } else {
+                                    alert("Error " + e.target.status + " occurred when trying to upload your file");
+                                }
+                            });
+                            xhttp.send(formData);
+                        }
+                    }
+                });
+
                 element.find(".file-clear-button").click(function(e) {
                     e.preventDefault();
                     var container = $(this).closest(".sortable");
@@ -92,7 +116,8 @@ class Slideshow extends Block {
                     if ($.trim(container.html())=='') {
                         container.remove();
                     }
-                    $("<input type='hidden' name='clear_slideshow[]' value='"+$(this).data('filename')+"'>").insertAfter("#slideshow_file_input");
+                    //ajax per rimuovere l'immagine $(this).data('filename') facoltativa
+                    //ricalcolo immagini da mettere nel json
                 });
 
                 element.find("div[data-preview]").each(function () {
