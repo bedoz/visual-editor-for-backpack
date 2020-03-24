@@ -10,7 +10,7 @@
         @if (isset($value) && is_array($value) && count($value))
             @foreach($value as $key => $file_path)
                 <div class="file-preview col-sm-3" style="margin-bottom: 20px;" data-gallery-data="{{htmlentities(json_encode($file_path))}}">
-                    <img src="{{asset(\Storage::disk($field['disk'])->url($file_path['image']))}}">
+                    <img src="{{asset(\Storage::disk('public')->url($file_path['image']))}}">
                     <div class="btn-group pull-right">
                         <a id="{{ $field['name'] }}_{{ $key }}_edit_button" href="javascript:;" class="btn btn-primary btn-xs file-edit-button" title="Edit image" data-filename="{{ $file_path['image'] }}"><i class="fa fa-edit"></i></a>
                         <a id="{{ $field['name'] }}_{{ $key }}_clear_button" href="javascript:;" class="btn btn-danger btn-xs file-clear-button" title="Clear image" data-filename="{{ $file_path['image'] }}"><i class="fa fa-remove"></i></a>
@@ -73,7 +73,7 @@
 <!-- upload multiple input -->
 <div class="galleryMultipleUpload">
     <label>Carica Immagini</label>
-    <input type="hidden" name="{{$id}}" value="{!! $value !!}">
+    <input type="hidden" name="{{$id}}" value="{{$value}}">
     <input
         type="file"
         accept="image/*"
@@ -85,4 +85,15 @@
     @if (isset($class::$hint))
         <p class="help-block">{!! $class::$hint !!}</p>
     @endif
+</div>
+
+<div class="d-none new-elements">
+    <div class="file-preview col-sm-3" style="margin-bottom: 20px;" data-gallery-data="">
+        <img src="">
+        <div class="btn-group pull-right">
+            <a id="edit_button" href="javascript:;" class="btn btn-primary btn-xs file-edit-button" title="Edit image"><i class="fa fa-edit"></i></a>
+            <a id="clear_button" href="javascript:;" class="btn btn-danger btn-xs file-clear-button" title="Clear image"><i class="fa fa-remove"></i></a>
+        </div>
+        <div class="clearfix"></div>
+    </div>
 </div>

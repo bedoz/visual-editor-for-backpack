@@ -41,7 +41,12 @@ class SlideshowController extends Controller {
 
             $filename = md5($filename.time()).'.'.$extension;
 
-            return $file->storeAs($destination_path, $filename, $disk);
+            $file_path = $file->storeAs($destination_path, $filename, $disk);
+
+            return \response()->json([
+                'image' => $file_path,
+                'sizes' => []
+            ]);
         }
 
         return false;

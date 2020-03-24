@@ -1,6 +1,7 @@
 <div class="row"
-     data-block="{{ $block::classSlug() }}"
-     data-block-label="{{ trans("visual-editor-for-backpack::blocks/{$block::$name}.name") }}">
+    data-block="{{ $block::classSlug() }}"
+    data-block-label="{{ trans("visual-editor-for-backpack::blocks/{$block::$name}.name") }}"
+    data-id="{{$id ?? 'VEBlockName'}}">
     <div class="col">
         <div class="visual-editor-content">
             {!! $block::renderBackend($crud, $entry, $id ?? 'VEBlockName', $value ?? '') !!}

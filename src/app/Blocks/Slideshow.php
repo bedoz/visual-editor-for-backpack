@@ -76,14 +76,19 @@ class Slideshow extends Block {
     }
 
     static public function pushScripts() {
+        $fieldName = self::fieldName();
         ?>
         <script src="<?php echo asset('packages/cropperjs/dist/cropper.min.js'); ?>"></script>
         <script>
             this['<?php echo self::classSlug(); ?>'] = function (element) {
-                element.find('input[name=VEBlockName]').attr("name", "<?php echo self::fieldName(); ?>");
+                if (element.data("id") === "VEBlockName") {
+                    element.find('input[name=VEBlockName]').attr("name", "<?php echo $fieldName; ?>");
+                    element.data("id", "<?php echo $fieldName; ?>").attr("data-id", "<?php echo $fieldName; ?>");
+                }
 
                 element.find("#slideshow_file_input").change(function(){
                     let files = $(this)[0].files;
+                    let error = false;
                     for (var i = 0; i < files.length; i++) {
                         if (/^image\/\w+$/.test(files[i].type)) {
                             //upload files e aggiunta al box
@@ -95,17 +100,38 @@ class Slideshow extends Block {
                             xhttp.open('POST', "<?php echo route('fields.slideshow.saveImage'); ?>", true);
                             xhttp.addEventListener('progress', function(e){});
                             xhttp.addEventListener('load', function(e) {
-                                if (e.target.status == 200) {
-                                    alert("Uploaded!");
+                                if (e.target.status === 200 && e.target.readyState === e.target.DONE) {
+                                    newel = element.find(".new-elements > div").clone();
+                                    newel.appendTo(element.find(".row.sortable"));
+                                    newel.data("gallery-data", e.target.response).attr("data-gallery-data", e.target.response);
+                                    var response = JSON.parse(e.target.response);
+                                    newel.children("img").attr("src", "<?php echo asset(\Storage::disk('public')->url("")); ?>" + response.image);
+
+                                    var gallery = element.find('input[name='+element.data("id")+']').val();
+                                    if (gallery !== "") {
+                                        gallery = JSON.parse(gallery);
+                                    } else {
+                                        gallery = [];
+                                    }
+                                    gallery.push(response);
+                                    gallery = JSON.stringify(gallery);
+                                    element.find('input[name='+element.data("id")+']').val(gallery);
                                 } else {
-                                    alert("Error " + e.target.status + " occurred when trying to upload your file");
+                                    error = true;
                                 }
                             });
                             xhttp.send(formData);
                         }
                     }
+                    if (error) {
+                        new Noty({
+                            type: "error",
+                            text: "<?php echo trans('visual-editor-for-backpack::blocks/' . self::$name . '.error_upload'); ?>",
+                        }).show();
+                    }
+                    element.find("#slideshow_file_input").val("");
                 });
-
+                /*
                 element.find(".file-clear-button").click(function(e) {
                     e.preventDefault();
                     var container = $(this).closest(".sortable");
@@ -302,7 +328,7 @@ class Slideshow extends Block {
                         xhttp.send();
                     });
 
-                    /*$('.sortable').sortable({
+                    $('.sortable').sortable({
                         placeholderClass: 'col-sm-3'
                     }).bind('sortupdate', function(e, ui) {
                         $.ajax({
@@ -323,8 +349,9 @@ class Slideshow extends Block {
                                 });
                             }
                         });
-                    });*/
+                    });
                 });
+                */
             }
         </script>
         <?php
