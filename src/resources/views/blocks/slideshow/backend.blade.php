@@ -7,13 +7,18 @@
 >
     <!-- Wrap the image or canvas element with a block element (container) -->
     <div class="row sortable">
-        @if (isset($value) && is_array($value) && count($value))
-            @foreach($value as $key => $file_path)
-                <div class="file-preview col-sm-3" style="margin-bottom: 20px;" data-gallery-data="{{htmlentities(json_encode($file_path))}}">
-                    <img src="{{asset(\Storage::disk('public')->url($file_path['image']))}}">
+        @if (isset($value) && !empty($value))
+            @php
+                $valueDecoded = json_decode($value);
+            @endphp
+        @endif
+        @if (isset($valueDecoded) && is_array($valueDecoded) && count($valueDecoded))
+            @foreach($valueDecoded as $key => $file_path)
+                <div class="file-preview col-sm-3" style="margin-bottom: 20px;" data-gallery-data="{{json_encode($file_path)}}">
+                    <img src="{{asset(\Storage::disk('public')->url($file_path->image))}}">
                     <div class="btn-group pull-right">
-                        <a id="{{ $field['name'] }}_{{ $key }}_edit_button" href="javascript:;" class="btn btn-primary btn-xs file-edit-button" title="Edit image" data-filename="{{ $file_path['image'] }}"><i class="fa fa-edit"></i></a>
-                        <a id="{{ $field['name'] }}_{{ $key }}_clear_button" href="javascript:;" class="btn btn-danger btn-xs file-clear-button" title="Clear image" data-filename="{{ $file_path['image'] }}"><i class="fa fa-remove"></i></a>
+                        <a id="edit_button" href="javascript:;" class="btn btn-primary btn-xs file-edit-button" title="Edit image"><i class="fa fa-edit"></i></a>
+                        <a id="clear_button" href="javascript:;" class="btn btn-danger btn-xs file-clear-button" title="Clear image"><i class="fa fa-remove"></i></a>
                     </div>
                     <div class="clearfix"></div>
                 </div>
