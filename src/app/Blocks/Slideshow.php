@@ -145,7 +145,7 @@ class Slideshow extends Block {
                     //ajax per rimuovere l'immagine $(this).data('filename') facoltativa
                     //ricalcolo immagini da mettere nel json
                 });
-
+                */
                 element.find("div[data-preview]").each(function () {
                     // Options either global for all image type fields, or use 'data-*' elements for options passed in via the CRUD controller
                     var options = {
@@ -163,8 +163,9 @@ class Slideshow extends Block {
                         $("#bottoni_crop").hide();
                     });
 
+                    var $parent = $(this);
+
                     $(this).find(".file-preview").find(".file-edit-button").click(function() {
-                        var $parent = $(this).closest(".form-group.gallery");
                         var $cropArea = $parent.find("#bottoni_crop");
                         var $currentImage = $(this).closest(".file-preview");
                         var $rotateLeft = $cropArea.find("#rotateLeft");
@@ -201,15 +202,23 @@ class Slideshow extends Block {
                                         if (typeof imageData == "string") {
                                             imageData = $.parseJSON(imageData);
                                         }
-                                        if (typeof imageData.sizes == 'undefined') {
+                                        if (typeof imageData.sizes == 'undefined' || imageData.sizes.length == 0) {
                                             imageData.sizes = {};
                                         }
-                                        imageData['sizes'][$ratioButtons.val()] = $mainImage.cropper('getData');
+                                        if (!$ratioButtons.val()) {
+                                            new Noty({
+                                                type: "error",
+                                                text: "<?php echo trans('visual-editor-for-backpack::blocks/' . self::$name . '.select_size_before'); ?>",
+                                            }).show();
+                                            return false;
+                                        }
+                                        imageData.sizes[$ratioButtons.val()] = $mainImage.cropper('getData');
                                         var folder = imageData.image.match( /.*\// );
                                         var filename = imageData.image.replace( /.*\//, "" );
-                                        imageData['sizes'][$ratioButtons.val()]['image'] = folder + $ratioButtons.val() + "_" + filename;
+                                        imageData.sizes[$ratioButtons.val()].image = folder + $ratioButtons.val() + "_" + filename;
                                         $currentImage.data("gallery-data",imageData).attr("data-gallery-data", JSON.stringify(imageData));
-                                        $.ajax({
+                                        console.log(imageData, JSON.stringify(imageData));
+                                        /*$.ajax({
                                             url: "<?php echo route('fields.slideshow.crop'); ?>",
                                             method: 'POST',
                                             data: {
@@ -226,7 +235,7 @@ class Slideshow extends Block {
                                                     type: "success"
                                                 });
                                             }
-                                        });
+                                        });*/
                                         $mainImage.cropper('getCroppedCanvas').toBlob(function (blob) {
                                             var formData = new FormData();
                                             formData.append('croppedImage', blob);
@@ -234,7 +243,7 @@ class Slideshow extends Block {
                                             formData.append('filename', imageData.image);
                                             formData.append('size', $ratioButtons.val());
                                             $.ajax({
-                                                url: '<?php echo route('fields.slideshow.saveImage'); ?>',
+                                                url: '<?php echo route('fields.slideshow.saveCrop'); ?>',
                                                 method: "POST",
                                                 data: formData,
                                                 processData: false,
@@ -327,7 +336,7 @@ class Slideshow extends Block {
                         };
                         xhttp.send();
                     });
-
+                    /*
                     $('.sortable').sortable({
                         placeholderClass: 'col-sm-3'
                     }).bind('sortupdate', function(e, ui) {
@@ -350,8 +359,8 @@ class Slideshow extends Block {
                             }
                         });
                     });
+                    */
                 });
-                */
             }
         </script>
         <?php

@@ -45,12 +45,46 @@ class SlideshowController extends Controller {
 
             return \response()->json([
                 'image' => $file_path,
-                'sizes' => []
+                'sizes' => new \stdClass()
             ]);
         }
 
         return false;
     }
+
+    function saveCrop(Request $request) {
+        $validator = Validator::make($request->all(), [
+            'croppedImage' => 'required|image',
+            'filename' => 'required|string',
+            'size' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+            return Response::json([
+                'error' => 'wrong values',
+                'error_description' => 'One or more fields has wrong values, please check it before send request.',
+                'fields' => $errors->all()
+            ], 400);
+        }
+        $attribute_name = "croppedImage";
+        $disk = "public";
+        $filename = basename($request->input("filename"));
+        $destination_path = dirname($request->input("filename"));
+        $size = $request->input("size");
+        $filename = $size."_".$filename;
+        if (\Storage::disk($disk)->exists($destination_path."/".$filename)) {
+            \Storage::disk($disk)->delete($destination_path."/".$filename);
+        }
+
+        if ($request->file($attribute_name)->isValid()) {
+            $file = $request->file($attribute_name);
+            return $file->storeAs($destination_path, $filename, $disk);
+        }
+        return false;
+    }
+
+
     
     function order(Request $request) {
         $validator = Validator::make($request->all(), [
@@ -94,18 +128,15 @@ class SlideshowController extends Controller {
         $model->save();
         return $model->{$field};
     }
-    
-    function crop(Request $request) {
-        return $this->galleryOrder($request);
-    }
-    
-    function saveCrop(Request $request) {
+
+    function galleryOrder(Request $request) {
         $validator = Validator::make($request->all(), [
-            'croppedImage' => 'required|image',
-            'filename' => 'required|string',
-            'size' => 'required|string',
+            'model' => 'required|string',
+            'id' => 'required|numeric',
+            'field' => 'required|string',
+            'value' => 'required|array',
         ]);
-        
+
         if ($validator->fails()) {
             $errors = $validator->errors();
             return Response::json([
@@ -114,21 +145,35 @@ class SlideshowController extends Controller {
                 'fields' => $errors->all()
             ], 400);
         }
-        $attribute_name = "croppedImage";
-        $disk = "uploads";
-        $filename = basename($request->input("filename"));
-        $destination_path = dirname($request->input("filename"));
-        $size = $request->input("size");
-        $filename = $size."_".$filename;
-        if (\Storage::disk($disk)->exists($destination_path."/".$filename)) {
-            \Storage::disk($disk)->delete($destination_path."/".$filename);
+
+        $model = $request->input("model");
+        if (!class_exists($model)) {
+            return Response::json([
+                'error' => 'wrong values',
+                'error_description' => 'Model doesn\'t exists',
+            ], 400);
         }
-        
-        if ($request->file($attribute_name)->isValid()) {
-            $file = $request->file($attribute_name);
-            return $file->storeAs($destination_path, $filename, $disk);
+        $model = $model::find($request->input("id"));
+        if (is_null($model)) {
+            return Response::json([
+                'error' => 'wrong values',
+                'error_description' => 'Content doesn\'t exists',
+            ], 400);
         }
-        return false;
+        if ($model->getAttributeValue($request->input("field")) == null) {
+            return Response::json([
+                'error' => 'wrong values',
+                'error_description' => 'Property doesn\'t exists',
+            ], 400);
+        }
+        $field = $request->input("field");
+        $model->{$field} = $request->input("value");
+        $model->save();
+        return $model->{$field};
+    }
+    
+    function crop(Request $request) {
+        return $this->galleryOrder($request);
     }
     
     function deleteImage(Request $request) {
