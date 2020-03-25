@@ -217,25 +217,16 @@ class Slideshow extends Block {
                                         var filename = imageData.image.replace( /.*\//, "" );
                                         imageData.sizes[$ratioButtons.val()].image = folder + $ratioButtons.val() + "_" + filename;
                                         $currentImage.data("gallery-data",imageData).attr("data-gallery-data", JSON.stringify(imageData));
-                                        console.log(imageData, JSON.stringify(imageData));
-                                        /*$.ajax({
-                                            url: "<?php echo route('fields.slideshow.crop'); ?>",
-                                            method: 'POST',
-                                            data: {
-                                                '_token': '<?php echo csrf_token(); ?>',
-                                                'model': 'Slideshow',
-                                                'id': '', //id elemento
-                                                'field': 'slideshow',
-                                                'value': $edit.closest(".file-preview").parent().find("[data-gallery-data]").map(function(){return $(this).data('gallery-data');}).get()
-                                            },
-                                            success: function () {
-                                                new PNotify({
-                                                    title: "Immagine Salvata",
-                                                    text: "Il nuovo taglio di immagine è stato salvato correttamente",
-                                                    type: "success"
-                                                });
+                                        var gallery = [];
+                                        element.find('div[data-preview] .file-preview').each(function(){
+                                            var imageData = $(this).data("gallery-data");
+                                            if (typeof imageData == "string") {
+                                                imageData = $.parseJSON(imageData);
                                             }
-                                        });*/
+                                            gallery.push(imageData);
+                                        });
+                                        gallery = JSON.stringify(gallery);
+                                        element.find('input[name='+element.data("id")+']').val(gallery);
                                         $mainImage.cropper('getCroppedCanvas').toBlob(function (blob) {
                                             var formData = new FormData();
                                             formData.append('croppedImage', blob);
@@ -336,6 +327,7 @@ class Slideshow extends Block {
                         };
                         xhttp.send();
                     });
+
                     /*
                     $('.sortable').sortable({
                         placeholderClass: 'col-sm-3'
