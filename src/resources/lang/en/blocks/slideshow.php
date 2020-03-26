@@ -7,4 +7,6 @@ return [
     'select_size_before' => 'Select a size before saving',
     'error_delete_crop' => 'There was an error while deleting crop',
     'deleted_crop' => 'Crop deleted, remember to save content to avoid issues',
+    'no_images' => 'No images are uploaded in this gallery',
+    'deleted_image' => 'Image deleted, remember to save content to avoid issues',
 ];

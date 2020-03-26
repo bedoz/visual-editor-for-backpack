@@ -25,7 +25,7 @@
             @endforeach
         @else
             <div class="col-sm-12 text-danger">
-                Nessuna immagine presente nella gallery
+                {{ trans('visual-editor-for-backpack::blocks/' . $class::$name . '.no_images') }}
             </div>
         @endif
     </div>

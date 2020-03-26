@@ -9,7 +9,4 @@ Route::group([
     Route::post('fields/slideshow/saveCroppedImage', 'SlideshowController@saveCrop')->name('fields.slideshow.saveCrop');
     Route::post('fields/slideshow/deleteCroppedImage', 'SlideshowController@deleteCrop')->name('fields.slideshow.deleteCrop');
     Route::post('fields/slideshow/deleteImage', 'SlideshowController@deleteImage')->name('fields.slideshow.deleteImage');
-
-    Route::post('fields/slideshow/order', 'SlideshowController@order')->name('fields.slideshow.order');
-    Route::post('fields/slideshow/crop', 'SlideshowController@crop')->name('fields.slideshow.crop');
 });

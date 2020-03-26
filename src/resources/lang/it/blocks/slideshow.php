@@ -7,4 +7,6 @@ return [
     'select_size_before' => 'Seleziona una proporzione prima di salvare',
     'error_delete_crop' => 'C\'è stato un errore durante la cancellazione del taglio',
     'deleted_crop' => 'Taglio cancellato, ricordati di salvare il contenuto per evitare problemi',
+    'no_images' => 'Nessuna immagine presente nella gallery',
+    'deleted_image' => 'Immagine eliminata, ricordati di salvare il contenuto per evitare problemi',
 ];

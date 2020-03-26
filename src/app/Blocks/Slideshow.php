@@ -81,14 +81,29 @@ class Slideshow extends Block {
         <script src="<?php echo asset('packages/cropperjs/dist/cropper.min.js'); ?>"></script>
         <script>
             this['<?php echo self::classSlug(); ?>'] = function (element) {
+                var updateData = function(){
+                    var gallery = [];
+                    element.find('div[data-preview] .file-preview').each(function(){
+                        var imageData = $(this).data("gallery-data");
+                        if (typeof imageData == "string") {
+                            imageData = $.parseJSON(imageData);
+                        }
+                        gallery.push(imageData);
+                    });
+                    gallery = JSON.stringify(gallery);
+                    element.find('input[name='+element.data("id")+']').val(gallery);
+                }
+
                 if (element.data("id") === "VEBlockName") {
                     element.find('input[name=VEBlockName]').attr("name", "<?php echo $fieldName; ?>");
                     element.data("id", "<?php echo $fieldName; ?>").attr("data-id", "<?php echo $fieldName; ?>");
                 }
 
                 element.find("#slideshow_file_input").change(function(){
+                    var $container = element.find(".row.sortable");
                     let files = $(this)[0].files;
                     let error = false;
+
                     for (var i = 0; i < files.length; i++) {
                         if (/^image\/\w+$/.test(files[i].type)) {
                             //upload files e aggiunta al box
@@ -102,20 +117,16 @@ class Slideshow extends Block {
                             xhttp.addEventListener('load', function(e) {
                                 if (e.target.status === 200 && e.target.readyState === e.target.DONE) {
                                     newel = element.find(".new-elements > div").clone();
-                                    newel.appendTo(element.find(".row.sortable"));
+                                    newel.appendTo($container);
                                     newel.data("gallery-data", e.target.response).attr("data-gallery-data", e.target.response);
                                     var response = JSON.parse(e.target.response);
                                     newel.children("img").attr("src", "<?php echo asset(\Storage::disk('public')->url("")); ?>" + response.image);
 
-                                    var gallery = element.find('input[name='+element.data("id")+']').val();
-                                    if (gallery !== "") {
-                                        gallery = JSON.parse(gallery);
-                                    } else {
-                                        gallery = [];
+                                    if ($container.children("div.text-danger").length > 0) {
+                                        $container.children("div.text-danger").remove();
                                     }
-                                    gallery.push(response);
-                                    gallery = JSON.stringify(gallery);
-                                    element.find('input[name='+element.data("id")+']').val(gallery);
+
+                                    updateData();
                                 } else {
                                     error = true;
                                 }
@@ -131,21 +142,41 @@ class Slideshow extends Block {
                     }
                     element.find("#slideshow_file_input").val("");
                 });
-                /*
-                element.find(".file-clear-button").click(function(e) {
-                    e.preventDefault();
-                    var container = $(this).closest(".sortable");
-                    var parent = $(this).closest(".file-preview");
-                    // remove the filename and button
-                    parent.remove();
-                    // if the file container is empty, remove it
-                    if ($.trim(container.html())=='') {
-                        container.remove();
+
+                element.on("click", ".file-clear-button", function(e) {
+                    var $container = $(this).closest(".sortable");
+                    var $currentImage = $(this).closest(".file-preview");
+                    var imageData = $currentImage.data("gallery-data");
+
+                    if (typeof imageData == "string") {
+                        imageData = $.parseJSON(imageData);
                     }
-                    //ajax per rimuovere l'immagine $(this).data('filename') facoltativa
-                    //ricalcolo immagini da mettere nel json
+                    if (typeof imageData.sizes == 'undefined' || imageData.sizes.length === 0) {
+                        imageData.sizes = {};
+                    }
+
+                    $.ajax({
+                        url: "<?php echo route('fields.slideshow.deleteImage'); ?>",
+                        method: 'POST',
+                        data: {
+                            '_token': '<?php echo csrf_token(); ?>',
+                            'image': imageData.image,
+                            'delete': Object.keys(imageData.sizes)
+                        },
+                        success: function (data) {
+                            $currentImage.remove();
+                            if ($.trim($container.html()) === '') {
+                                $('<div class="col-sm-12 text-danger"><?php echo trans('visual-editor-for-backpack::blocks/' . self::$name . '.no_images'); ?></div>').appendTo($container);
+                            }
+                            updateData();
+                            new Noty({
+                                type: "success",
+                                text: "<?php echo trans('visual-editor-for-backpack::blocks/' . self::$name . '.deleted_image'); ?>"
+                            }).show();
+                        }
+                    });
                 });
-                */
+
                 element.find("div[data-preview]").each(function () {
                     // Options either global for all image type fields, or use 'data-*' elements for options passed in via the CRUD controller
                     var options = {
@@ -174,7 +205,6 @@ class Slideshow extends Block {
                         var $zoomOut = $cropArea.find("#zoomOut");
                         var $reset = $cropArea.find("#reset");
                         var $save = $cropArea.find("#save");
-                        var $edit = $(this);
                         var $ratioButtons = $cropArea.find("#aspectRatio select");
                         var $tagliDisponibili = $cropArea.find("#tagliDisponibili");
                         var $mainImage = $cropArea.find('#mainImage');
@@ -182,7 +212,6 @@ class Slideshow extends Block {
                         var imageData = $currentImage.data("gallery-data");
                         var url = $image.attr("src");
                         var xhttp = new XMLHttpRequest();
-                        var updateData = null;
                         $save.unbind("click");
                         $rotateLeft.unbind("click");
                         $rotateRight.unbind("click");
@@ -203,7 +232,7 @@ class Slideshow extends Block {
                                         if (typeof imageData == "string") {
                                             imageData = $.parseJSON(imageData);
                                         }
-                                        if (typeof imageData.sizes == 'undefined' || imageData.sizes.length == 0) {
+                                        if (typeof imageData.sizes == 'undefined' || imageData.sizes.length === 0) {
                                             imageData.sizes = {};
                                         }
                                         if (!$ratioButtons.val()) {
@@ -296,7 +325,6 @@ class Slideshow extends Block {
                                                 'delete': taglio
                                             },
                                             success: function (data) {
-                                                console.log(data);
                                                 if (data != 1) {
                                                     new Noty({
                                                         type: "error",
@@ -322,47 +350,7 @@ class Slideshow extends Block {
                             }
                         };
                         xhttp.send();
-
-                        updateData = function(){
-                            var gallery = [];
-                            element.find('div[data-preview] .file-preview').each(function(){
-                                var imageData = $(this).data("gallery-data");
-                                if (typeof imageData == "string") {
-                                    imageData = $.parseJSON(imageData);
-                                }
-                                gallery.push(imageData);
-                            });
-                            gallery = JSON.stringify(gallery);
-                            element.find('input[name='+element.data("id")+']').val(gallery);
-                        }
                     });
-
-                    /*
-                    $('.sortable').sortable({
-                        placeholderClass: 'col-sm-3'
-                    }).bind('sortupdate', function(e, ui) {
-                        $.ajax({
-                            url: "<?php echo route('fields.slideshow.order'); ?>",
-                            method: 'POST',
-                            data: {
-                                '_token': '<?php echo csrf_token(); ?>',
-                                'model': 'Slideshow',
-                                'id': '', //id elemento
-                                'field': 'slideshow',
-                                'value': $(ui.item).parent().find("[data-gallery-data]").map(function(){return $(this).data('gallery-data');}).get()
-                            },
-                            success: function () {
-                                new PNotify({
-                                    title: "Ordine Salvato",
-                                    text: "L'ordine corrente è stato salvato",
-                                    type: "success"
-                                });
-                            }
-                        });
-                    });
-                    */
-
-
                 });
             }
         </script>

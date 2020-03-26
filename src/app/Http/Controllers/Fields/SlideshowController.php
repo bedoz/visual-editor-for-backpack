@@ -110,102 +110,13 @@ class SlideshowController extends Controller {
         }
         return false;
     }
-    
-    function order(Request $request) {
-        $validator = Validator::make($request->all(), [
-            'model' => 'required|string',
-            'id' => 'required|numeric',
-            'field' => 'required|string',
-            'value' => 'required|array',
-        ]);
-        
-        if ($validator->fails()) {
-            $errors = $validator->errors();
-            return Response::json([
-                'error' => 'wrong values',
-                'error_description' => 'One or more fields has wrong values, please check it before send request.',
-                'fields' => $errors->all()
-            ], 400);
-        }
-        
-        $model = $request->input("model");
-        if (!class_exists($model)) {
-            return Response::json([
-                'error' => 'wrong values',
-                'error_description' => 'Model doesn\'t exists',
-            ], 400);
-        }
-        $model = $model::find($request->input("id"));
-        if (is_null($model)) {
-            return Response::json([
-                'error' => 'wrong values',
-                'error_description' => 'Content doesn\'t exists',
-            ], 400);
-        }
-        if ($model->getAttributeValue($request->input("field")) == null) {
-            return Response::json([
-                'error' => 'wrong values',
-                'error_description' => 'Property doesn\'t exists',
-            ], 400);
-        }
-        $field = $request->input("field");
-        $model->{$field} = $request->input("value");
-        $model->save();
-        return $model->{$field};
-    }
 
-    function galleryOrder(Request $request) {
-        $validator = Validator::make($request->all(), [
-            'model' => 'required|string',
-            'id' => 'required|numeric',
-            'field' => 'required|string',
-            'value' => 'required|array',
-        ]);
-
-        if ($validator->fails()) {
-            $errors = $validator->errors();
-            return Response::json([
-                'error' => 'wrong values',
-                'error_description' => 'One or more fields has wrong values, please check it before send request.',
-                'fields' => $errors->all()
-            ], 400);
-        }
-
-        $model = $request->input("model");
-        if (!class_exists($model)) {
-            return Response::json([
-                'error' => 'wrong values',
-                'error_description' => 'Model doesn\'t exists',
-            ], 400);
-        }
-        $model = $model::find($request->input("id"));
-        if (is_null($model)) {
-            return Response::json([
-                'error' => 'wrong values',
-                'error_description' => 'Content doesn\'t exists',
-            ], 400);
-        }
-        if ($model->getAttributeValue($request->input("field")) == null) {
-            return Response::json([
-                'error' => 'wrong values',
-                'error_description' => 'Property doesn\'t exists',
-            ], 400);
-        }
-        $field = $request->input("field");
-        $model->{$field} = $request->input("value");
-        $model->save();
-        return $model->{$field};
-    }
-    
     function deleteImage(Request $request) {
         $validator = Validator::make($request->all(), [
-            'model' => 'required|string',
-            'id' => 'required|numeric',
-            'field' => 'required|string',
             'image' => 'required|string',
-            'delete' => 'required|string',
+            'delete' => 'array',
         ]);
-        
+
         if ($validator->fails()) {
             $errors = $validator->errors();
             return Response::json([
@@ -214,47 +125,21 @@ class SlideshowController extends Controller {
                 'fields' => $errors->all()
             ], 400);
         }
-        
-        $model = $request->input("model");
-        if (!class_exists($model)) {
-            return Response::json([
-                'error' => 'wrong values',
-                'error_description' => 'Model doesn\'t exists',
-            ], 400);
-        }
-        $model = $model::find($request->input("id"));
-        if (is_null($model)) {
-            return Response::json([
-                'error' => 'wrong values',
-                'error_description' => 'Content doesn\'t exists',
-            ], 400);
-        }
-        if ($model->getAttributeValue($request->input("field")) == null) {
-            return Response::json([
-                'error' => 'wrong values',
-                'error_description' => 'Property doesn\'t exists',
-            ], 400);
-        }
-        
-        $field = $request->input("field");
-        $image = $request->input("image");
-        $delete = $request->input("delete");
-        $currentValue = $model->{$field};
-        $value = array_where($model->{$field}, function($value, $key) use ($image){
-            return $value['image'] == $image;
-        });
-        foreach ($value as $k => $v) {
-            if (isset($currentValue[$k]['sizes'][$delete])) {
-                unset($currentValue[$k]['sizes'][$delete]);
-                unset($value[$k]['sizes'][$delete]);
-            }
-            if (count($currentValue[$k]['sizes']) == 0) {
-                unset($currentValue[$k]['sizes']);
-                unset($value[$k]['sizes']);
+
+        $disk = "public";
+        $filename = basename($request->input("image"));
+        $destination_path = dirname($request->input("image"));
+        $sizes = $request->input("delete");
+        if ($sizes) {
+            foreach ($sizes as $size) {
+                $cropFile = $size."_".$filename;
+                if (\Storage::disk($disk)->exists($destination_path."/".$cropFile)) {
+                    \Storage::disk($disk)->delete($destination_path."/".$cropFile);
+                }
             }
         }
-        $model->{$field} = $currentValue;
-        $model->save();
-        return json_encode(reset($value));
+        if (\Storage::disk($disk)->exists($destination_path."/".$filename)) {
+            \Storage::disk($disk)->delete($destination_path."/".$filename);
+        }
     }
 }
