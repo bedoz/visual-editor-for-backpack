@@ -79,6 +79,7 @@ class Slideshow extends Block {
         $fieldName = self::fieldName();
         ?>
         <script src="<?php echo asset('packages/cropperjs/dist/cropper.min.js'); ?>"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html5sortable/0.9.17/html5sortable.min.js" integrity="sha256-fdNI7V9EvWA6jnRNuFseI3IGOyju9F7Ds4q3CeyxtlM=" crossorigin="anonymous"></script>
         <script>
             this['<?php echo self::classSlug(); ?>'] = function (element) {
                 var updateData = function(){
@@ -121,6 +122,8 @@ class Slideshow extends Block {
                                     newel.data("gallery-data", e.target.response).attr("data-gallery-data", e.target.response);
                                     var response = JSON.parse(e.target.response);
                                     newel.children("img").attr("src", "<?php echo asset(\Storage::disk('public')->url("")); ?>" + response.image);
+
+                                    sortable('.sortable');
 
                                     if ($container.children("div.text-danger").length > 0) {
                                         $container.children("div.text-danger").remove();
@@ -189,6 +192,33 @@ class Slideshow extends Block {
                         preview : $(this).attr('data-preview'),
                         aspectRatio : $(this).attr('data-aspectRatio')
                     };
+
+                    sortable('.sortable', {
+                        placeholderClass: 'col-sm-3',
+                        forcePlaceholderSize: true
+                    })[0].addEventListener('sortupdate', function(e) {
+                        updateData();
+                        //console.log(e.detail);
+                        /*
+                        This event is triggered when the user stopped sorting and the DOM position has changed.
+
+                        e.detail.item - {HTMLElement} dragged element
+
+                        Origin Container Data
+                        e.detail.origin.index - {Integer} Index of the element within Sortable Items Only
+                        e.detail.origin.elementIndex - {Integer} Index of the element in all elements in the Sortable Container
+                        e.detail.origin.container - {HTMLElement} Sortable Container that element was moved out of (or copied from)
+                        e.detail.origin.itemsBeforeUpdate - {Array} Sortable Items before the move
+                        e.detail.origin.items - {Array} Sortable Items after the move
+
+                        Destination Container Data
+                        e.detail.destination.index - {Integer} Index of the element within Sortable Items Only
+                        e.detail.destination.elementIndex - {Integer} Index of the element in all elements in the Sortable Container
+                        e.detail.destination.container - {HTMLElement} Sortable Container that element was moved out of (or copied from)
+                        e.detail.destination.itemsBeforeUpdate - {Array} Sortable Items before the move
+                        e.detail.destination.items - {Array} Sortable Items after the move
+                        */
+                    });
 
                     // Only initialize cropper plugin if crop is set to true
                     $(this).on("click", "#remove", function() {
