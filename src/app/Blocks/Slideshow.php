@@ -182,6 +182,7 @@ class Slideshow extends Block {
                         var imageData = $currentImage.data("gallery-data");
                         var url = $image.attr("src");
                         var xhttp = new XMLHttpRequest();
+                        var updateData = null;
                         $save.unbind("click");
                         $rotateLeft.unbind("click");
                         $rotateRight.unbind("click");
@@ -217,16 +218,7 @@ class Slideshow extends Block {
                                         var filename = imageData.image.replace( /.*\//, "" );
                                         imageData.sizes[$ratioButtons.val()].image = folder + $ratioButtons.val() + "_" + filename;
                                         $currentImage.data("gallery-data",imageData).attr("data-gallery-data", JSON.stringify(imageData));
-                                        var gallery = [];
-                                        element.find('div[data-preview] .file-preview').each(function(){
-                                            var imageData = $(this).data("gallery-data");
-                                            if (typeof imageData == "string") {
-                                                imageData = $.parseJSON(imageData);
-                                            }
-                                            gallery.push(imageData);
-                                        });
-                                        gallery = JSON.stringify(gallery);
-                                        element.find('input[name='+element.data("id")+']').val(gallery);
+                                        updateData();
                                         $mainImage.cropper('getCroppedCanvas').toBlob(function (blob) {
                                             var formData = new FormData();
                                             formData.append('croppedImage', blob);
@@ -294,28 +286,32 @@ class Slideshow extends Block {
                                     }
                                     $tagliDisponibili.on("click", ".cancella_miniatura", function(){
                                         var $this = $(this);
+                                        var taglio = $(this).closest("[data-taglio]").data("taglio");
                                         $.ajax({
-                                            url: "<?php echo route('fields.slideshow.deleteImage'); ?>",
+                                            url: "<?php echo route('fields.slideshow.deleteCrop'); ?>",
                                             method: 'POST',
                                             data: {
                                                 '_token': '<?php echo csrf_token(); ?>',
-                                                'model': 'Slideshow',
-                                                'id': '', //id elemento
-                                                'field': 'slideshow',
                                                 'image': imageData.image,
-                                                'delete': $(this).closest("[data-taglio]").data("taglio")
+                                                'delete': taglio
                                             },
                                             success: function (data) {
-                                                if (typeof data == "string") {
-                                                    data = $.parseJSON(data);
+                                                console.log(data);
+                                                if (data != 1) {
+                                                    new Noty({
+                                                        type: "error",
+                                                        text: "<?php echo trans('visual-editor-for-backpack::blocks/' . self::$name . '.error_delete_crop'); ?>"
+                                                    }).show();
+                                                    return false;
                                                 }
-                                                $edit.closest(".file-preview").data("gallery-data", data).attr("data-gallery-data", JSON.stringify(data));
+                                                delete imageData.sizes[taglio];
+                                                $currentImage.data("gallery-data", imageData).attr("data-gallery-data", JSON.stringify(imageData));
+                                                updateData();
                                                 $this.closest("[data-taglio]").remove();
-                                                new PNotify({
-                                                    title: "Immagine Cancellata",
-                                                    text: "Il taglio di immagine è stato cancellato",
-                                                    type: "success"
-                                                });
+                                                new Noty({
+                                                    type: "success",
+                                                    text: "<?php echo trans('visual-editor-for-backpack::blocks/' . self::$name . '.deleted_crop'); ?>"
+                                                }).show();
                                             }
                                         });
                                     });
@@ -326,6 +322,19 @@ class Slideshow extends Block {
                             }
                         };
                         xhttp.send();
+
+                        updateData = function(){
+                            var gallery = [];
+                            element.find('div[data-preview] .file-preview').each(function(){
+                                var imageData = $(this).data("gallery-data");
+                                if (typeof imageData == "string") {
+                                    imageData = $.parseJSON(imageData);
+                                }
+                                gallery.push(imageData);
+                            });
+                            gallery = JSON.stringify(gallery);
+                            element.find('input[name='+element.data("id")+']').val(gallery);
+                        }
                     });
 
                     /*
@@ -352,6 +361,8 @@ class Slideshow extends Block {
                         });
                     });
                     */
+
+
                 });
             }
         </script>

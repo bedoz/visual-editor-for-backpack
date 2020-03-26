@@ -84,7 +84,32 @@ class SlideshowController extends Controller {
         return false;
     }
 
+    function deleteCrop(Request $request) {
+        $validator = Validator::make($request->all(), [
+            'image' => 'required|string',
+            'delete' => 'required|string',
+        ]);
 
+        if ($validator->fails()) {
+            $errors = $validator->errors();
+            return Response::json([
+                'error' => 'wrong values',
+                'error_description' => 'One or more fields has wrong values, please check it before send request.',
+                'fields' => $errors->all()
+            ], 400);
+        }
+
+        $disk = "public";
+        $filename = basename($request->input("image"));
+        $destination_path = dirname($request->input("image"));
+        $size = $request->input("delete");
+        $filename = $size."_".$filename;
+        if (\Storage::disk($disk)->exists($destination_path."/".$filename)) {
+            \Storage::disk($disk)->delete($destination_path."/".$filename);
+            return true;
+        }
+        return false;
+    }
     
     function order(Request $request) {
         $validator = Validator::make($request->all(), [
@@ -170,10 +195,6 @@ class SlideshowController extends Controller {
         $model->{$field} = $request->input("value");
         $model->save();
         return $model->{$field};
-    }
-    
-    function crop(Request $request) {
-        return $this->galleryOrder($request);
     }
     
     function deleteImage(Request $request) {
