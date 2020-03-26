@@ -47,9 +47,9 @@
                     </div>
                 </div>
                 <div class="col-sm-12" style="padding-bottom: 10px;" id="aspectRatio">
-                    <div>Proporzione:</div>
+                    <div>{{ trans('visual-editor-for-backpack::blocks/' . $class::$name . '.ratio') }}:</div>
                     <select>
-                        <option selected disabled hidden>Seleziona proporzione</option>
+                        <option selected disabled hidden>{{ trans('visual-editor-for-backpack::blocks/' . $class::$name . '.select_ratio') }}</option>
                         @foreach($class::$sizes as $titolo => $data)
                             <option value="{{$titolo}}" data-ratio="{{$data['ratio']}}">{{$titolo}}</option>
                         @endforeach
@@ -77,7 +77,7 @@
 
 <!-- upload multiple input -->
 <div class="galleryMultipleUpload">
-    <label>Carica Immagini</label>
+    <label>{{ trans('visual-editor-for-backpack::blocks/' . $class::$name . '.upload_images') }}</label>
     <input type="hidden" name="{{$id}}" value="{{$value}}">
     <input
         type="file"

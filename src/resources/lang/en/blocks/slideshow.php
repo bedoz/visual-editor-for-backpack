@@ -11,4 +11,7 @@ return [
     'deleted_image' => 'Image deleted, remember to save content to avoid issues',
     'saved_crop' => 'Crop saved',
     'saving' => 'Saving...',
+    'ratio' => 'Ratio',
+    'select_ratio' => 'Select ratio',
+    'upload_images' => 'Upload images',
 ];

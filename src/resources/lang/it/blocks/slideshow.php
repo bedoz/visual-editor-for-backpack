@@ -11,4 +11,7 @@ return [
     'deleted_image' => 'Immagine eliminata, ricordati di salvare il contenuto per evitare problemi',
     'saved_crop' => 'Taglio salvato',
     'saving' => 'Salvataggio in corso...',
+    'ratio' => 'Proporzione',
+    'select_ratio' => 'Seleziona proporzione',
+    'upload_images' => 'Carica Immagini',
 ];
