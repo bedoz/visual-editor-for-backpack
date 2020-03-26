@@ -155,6 +155,8 @@ class Slideshow extends Block {
                         imageData.sizes = {};
                     }
 
+                    element.find("#remove").click();
+
                     $.ajax({
                         url: "<?php echo route('fields.slideshow.deleteImage'); ?>",
                         method: 'POST',
@@ -189,14 +191,14 @@ class Slideshow extends Block {
                     };
 
                     // Only initialize cropper plugin if crop is set to true
-                    $(this).find("#remove").click(function() {
+                    $(this).on("click", "#remove", function() {
                         $(this).closest("#bottoni_crop").find('#mainImage').attr('src','').cropper("destroy");
                         $("#bottoni_crop").hide();
                     });
 
                     var $parent = $(this);
 
-                    $(this).find(".file-preview").find(".file-edit-button").click(function() {
+                    $(this).on("click" , ".file-preview .file-edit-button", function() {
                         var $cropArea = $parent.find("#bottoni_crop");
                         var $currentImage = $(this).closest(".file-preview");
                         var $rotateLeft = $cropArea.find("#rotateLeft");
@@ -228,6 +230,10 @@ class Slideshow extends Block {
                                 if (/^image\/\w+$/.test(type)) {
                                     $mainImage.cropper(options).cropper("reset", true).cropper("replace", url);
                                     $save.click(function() {
+                                        new Noty({
+                                            type: "warning",
+                                            text: "<?php echo trans('visual-editor-for-backpack::blocks/' . self::$name . '.saving'); ?>",
+                                        }).show();
                                         imageData = $currentImage.data("gallery-data");
                                         if (typeof imageData == "string") {
                                             imageData = $.parseJSON(imageData);
@@ -273,6 +279,11 @@ class Slideshow extends Block {
                                                     }
                                                     d = new Date();
                                                     $tagliDisponibili.find("[data-taglio="+$ratioButtons.val()+"]").find("img").attr("src", "<?php echo \Storage::disk("public")->url(""); ?>"+data+"?"+d.getTime());
+                                                    new Noty({
+                                                        type: "success",
+                                                        text: "<?php echo trans('visual-editor-for-backpack::blocks/' . self::$name . '.saved_crop'); ?>",
+                                                    }).show();
+                                                    $ratioButtons.val("");
                                                 }
                                             });
                                         });

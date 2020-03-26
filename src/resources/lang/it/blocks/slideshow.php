@@ -9,4 +9,6 @@ return [
     'deleted_crop' => 'Taglio cancellato, ricordati di salvare il contenuto per evitare problemi',
     'no_images' => 'Nessuna immagine presente nella gallery',
     'deleted_image' => 'Immagine eliminata, ricordati di salvare il contenuto per evitare problemi',
+    'saved_crop' => 'Taglio salvato',
+    'saving' => 'Salvataggio in corso...',
 ];

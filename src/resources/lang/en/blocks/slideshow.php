@@ -9,4 +9,6 @@ return [
     'deleted_crop' => 'Crop deleted, remember to save content to avoid issues',
     'no_images' => 'No images are uploaded in this gallery',
     'deleted_image' => 'Image deleted, remember to save content to avoid issues',
+    'saved_crop' => 'Crop saved',
+    'saving' => 'Saving...',
 ];
