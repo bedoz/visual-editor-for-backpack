@@ -1,8 +1,6 @@
 <div @include('crud::inc.field_wrapper_attributes') >
+    <label>{{ $field['label'] }}</label>
     @include('crud::inc.field_translatable_icon')
-    <label>
-        {{ $field['label'] }}
-    </label>
 
     <input type="hidden"
            name="{{ $field['name'] }}"
@@ -102,6 +100,32 @@
 
                 $("div.visual-editor-rows").on("click", "div.visual-editor-icons a.trash", function () {
                     $(this).closest("[data-block]").remove();
+                });
+
+                $("div.visual-editor-rows").on("click", "div.visual-editor-icons a.up", function () {
+                    const $me = $(this).closest("[data-block]");
+                    const $pos = $me.parent().children().index($me);
+                    if ($pos === 0) {
+                        new Noty({
+                            type: "error",
+                            text: '{{ trans('visual-editor-for-backpack::interface.already_first') }}',
+                        }).show();
+                        return false;
+                    }
+                    $me.insertBefore($me.parent().children(":eq("+ ($pos - 1) +")"));
+                });
+
+                $("div.visual-editor-rows").on("click", "div.visual-editor-icons a.down", function () {
+                    const $me = $(this).closest("[data-block]");
+                    const $pos = $me.parent().children().index($me);
+                    if ($pos === $me.parent().children().length - 1) {
+                        new Noty({
+                            type: "error",
+                            text: '{{ trans('visual-editor-for-backpack::interface.already_last') }}',
+                        }).show();
+                        return false;
+                    }
+                    $me.insertAfter($me.parent().children(":eq("+ ($pos + 1) +")"));
                 });
             });
         </script>
