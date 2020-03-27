@@ -91,11 +91,11 @@
                     }
                     let element = $("div.visual-editor-templates").children("[data-block='" + block + "']").clone();
                     element.appendTo("div.visual-editor-rows");
-                    window[block](element);
+                    window[block].init(element);
                 });
 
                 $("div.visual-editor-rows > [data-block]").each(function (index) {
-                    window[$(this).data("block")]($(this));
+                    window[$(this).data("block")].init($(this));
                 });
 
                 $("div.visual-editor-rows").on("click", "div.visual-editor-icons a.trash", function () {
@@ -112,7 +112,10 @@
                         }).show();
                         return false;
                     }
+                    const block = $me.data('block');
+                    window[block].beforeSort($me);
                     $me.insertBefore($me.parent().children(":eq("+ ($pos - 1) +")"));
+                    window[block].afterSort($me);
                 });
 
                 $("div.visual-editor-rows").on("click", "div.visual-editor-icons a.down", function () {
@@ -125,7 +128,10 @@
                         }).show();
                         return false;
                     }
+                    const block = $me.data('block');
+                    window[block].beforeSort($me);
                     $me.insertAfter($me.parent().children(":eq("+ ($pos + 1) +")"));
+                    window[block].afterSort($me);
                 });
             });
         </script>

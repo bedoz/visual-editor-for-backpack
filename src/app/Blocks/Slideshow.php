@@ -81,7 +81,13 @@ class Slideshow extends Block {
         <script src="<?php echo asset('packages/cropperjs/dist/cropper.min.js'); ?>"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/html5sortable/0.9.17/html5sortable.min.js" integrity="sha256-fdNI7V9EvWA6jnRNuFseI3IGOyju9F7Ds4q3CeyxtlM=" crossorigin="anonymous"></script>
         <script>
-            this['<?php echo self::classSlug(); ?>'] = function (element) {
+            this['<?php echo self::classSlug(); ?>'] = {};
+
+            this['<?php echo self::classSlug(); ?>'].beforeSort = function (element) {}
+
+            this['<?php echo self::classSlug(); ?>'].afterSort = function (element) {}
+
+            this['<?php echo self::classSlug(); ?>'].init = function (element) {
                 var updateData = function(){
                     var gallery = [];
                     element.find('div[data-preview] .file-preview').each(function(){

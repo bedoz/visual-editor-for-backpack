@@ -17,14 +17,31 @@ class Text extends Block {
         <script src="<?php echo asset('packages/ckeditor/ckeditor.js'); ?>"></script>
         <script src="<?php echo asset('packages/ckeditor/adapters/jquery.js'); ?>"></script>
         <script>
-            this['<?php echo self::classSlug(); ?>'] = function (element) {
-                element.find('textarea[name=VEBlockName]').attr("name", "<?php echo self::fieldName(); ?>");
+            this['<?php echo self::classSlug(); ?>'] = {};
 
+            this['<?php echo self::classSlug(); ?>'].startCKEditor = function (element) {
                 element.find('textarea').ckeditor({
                     "filebrowserBrowseUrl": "<?php echo url(config('backpack.base.route_prefix').'/elfinder/ckeditor'); ?>",
                     "extraPlugins" : 'embed,widget',
                     "embed_provider": '//ckeditor.iframe.ly/api/oembed?url={url}&callback={callback}'
                 });
+            }
+
+            this['<?php echo self::classSlug(); ?>'].beforeSort = function (element) {
+                var instanceName = element.find('textarea').siblings("[id^='cke_']").attr("id");
+                instanceName = instanceName.substr(4);
+                if(CKEDITOR.instances[instanceName]) {
+                    CKEDITOR.instances[instanceName].destroy();
+                }
+            }
+
+            this['<?php echo self::classSlug(); ?>'].afterSort = function (element) {
+                window['<?php echo self::classSlug(); ?>'].startCKEditor(element);
+            }
+
+            this['<?php echo self::classSlug(); ?>'].init = function (element) {
+                element.find('textarea[name=VEBlockName]').attr("name", "<?php echo self::fieldName(); ?>");
+                window['<?php echo self::classSlug(); ?>'].startCKEditor(element);
             }
         </script>
         <?php
