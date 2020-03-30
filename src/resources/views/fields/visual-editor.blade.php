@@ -13,7 +13,7 @@
         </p>
     @endif
 
-    <div class="visual-editor-rows">
+    <div class="visual-editor-rows bg-light">
         @if($entry)
             @php
                 $fields = json_decode($entry->{$field['name']});
@@ -35,6 +35,11 @@
         @foreach(config('visual-editor.blocks') as $block)
             @include('visual-editor-for-backpack::interface.block', ['block' => $block, 'crud' => $crud, 'entry' => $entry ?? null, 'id' => null, 'value' => null])
         @endforeach
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <label>{{ trans('visual-editor-for-backpack::interface.choose_a_block') }}</label>
+        </div>
     </div>
     <div class="form-row">
         <div class="col">

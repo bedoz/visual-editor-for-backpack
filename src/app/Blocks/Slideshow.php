@@ -5,7 +5,7 @@ namespace Bedoz\VisualEditorForBackpack\app\Blocks;
 class Slideshow extends Block {
     public static $name = 'slideshow';
     public static $label = 'Slideshow';
-    public static $hint = 'Hint';
+    public static $hint = '';
     public static $sizes = [
         'quadrata' => [
             'ratio' => 1,

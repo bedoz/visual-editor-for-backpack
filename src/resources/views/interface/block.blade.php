@@ -1,4 +1,4 @@
-<div class="row"
+<div class="row p-3"
     data-block="{{ $block::classSlug() }}"
     data-block-label="{{ trans("visual-editor-for-backpack::blocks/{$block::$name}.name") }}"
     data-id="{{$id ?? 'VEBlockName'}}">
