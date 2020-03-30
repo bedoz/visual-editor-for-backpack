@@ -1,7 +1,7 @@
 <div>
     <label>{{$class::$label}}</label>
 </div>
-<div data-preview="#bottoni_crop .img-preview"
+<div data-preview="[data-id='{{$id}}'] #bottoni_crop .img-preview"
      data-aspectRatio="0"
      data-crop="true"
 >

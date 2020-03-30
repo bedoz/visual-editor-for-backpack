@@ -229,7 +229,7 @@ class Slideshow extends Block {
                     // Only initialize cropper plugin if crop is set to true
                     $(this).on("click", "#remove", function() {
                         $(this).closest("#bottoni_crop").find('#mainImage').attr('src','').cropper("destroy");
-                        $("#bottoni_crop").hide();
+                        element.find("#bottoni_crop").hide();
                     });
 
                     var $parent = $(this);
@@ -390,7 +390,7 @@ class Slideshow extends Block {
                                             }
                                         });
                                     });
-                                    $("#bottoni_crop").show();
+                                    element.find("#bottoni_crop").show();
                                 } else {
                                     alert("Please choose an image file.");
                                 }
