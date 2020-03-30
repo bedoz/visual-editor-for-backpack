@@ -1,6 +1,7 @@
 <div @include('crud::inc.field_wrapper_attributes') >
     <label>{{ $field['label'] }}</label>
     @include('crud::inc.field_translatable_icon')
+    <a href="javascript:;" class="btn btn-default visual-editor-preview">{{ trans('visual-editor-for-backpack::interface.preview') }}</a>
 
     <input type="hidden"
            name="{{ $field['name'] }}"
@@ -76,6 +77,9 @@
         @foreach(config('visual-editor.blocks') as $block)
             {!! $block::pushStyle() !!}
         @endforeach
+        <style>
+            .visual-editor-preview {float: right;}
+        </style>
     @endpush
 
     {{-- FIELD JS - will be loaded in the after_scripts section --}}

@@ -3,6 +3,14 @@
 Route::group([
     'prefix'     => config('backpack.base.route_prefix', 'admin'),
     'middleware' => ['web', config('backpack.base.middleware_key', 'admin')],
+    'namespace'  => 'Bedoz\VisualEditorForBackpack\app\Http\Controllers',
+], function () {
+    Route::post('visualEditor/preview/{data}', 'VisualEditorController@preview')->name('visualEditor.preview');
+});
+
+Route::group([
+    'prefix'     => config('backpack.base.route_prefix', 'admin'),
+    'middleware' => ['web', config('backpack.base.middleware_key', 'admin')],
     'namespace'  => 'Bedoz\VisualEditorForBackpack\app\Http\Controllers\Fields',
 ], function () {
     Route::post('fields/slideshow/saveImage', 'SlideshowController@saveImage')->name('fields.slideshow.saveImage');
