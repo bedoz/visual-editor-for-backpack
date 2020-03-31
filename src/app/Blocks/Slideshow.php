@@ -400,6 +400,8 @@ class Slideshow extends Block {
                     });
                 });
             }
+
+            this['<?php echo self::classSlug(); ?>'].destroy = function (element) {}
         </script>
         <?php
     }

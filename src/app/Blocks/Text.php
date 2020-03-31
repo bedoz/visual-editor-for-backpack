@@ -43,6 +43,14 @@ class Text extends Block {
                 element.find('textarea[name=VEBlockName]').attr("name", "<?php echo self::fieldName(); ?>");
                 window['<?php echo self::classSlug(); ?>'].startCKEditor(element);
             }
+
+            this['<?php echo self::classSlug(); ?>'].destroy = function (element) {
+                var instanceName = element.find('textarea').siblings("[id^='cke_']").attr("id");
+                instanceName = instanceName.substr(4);
+                if(CKEDITOR.instances[instanceName]) {
+                    CKEDITOR.instances[instanceName].destroy();
+                }
+            }
         </script>
         <?php
     }
