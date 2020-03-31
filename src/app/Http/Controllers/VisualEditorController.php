@@ -9,6 +9,13 @@ class VisualEditorController extends Controller {
         $request->validate([
             'data' => 'required|json'
         ]);
-        dd($request->input('data'));
+        $data = json_decode($request->input('data'), true);
+        foreach ($data as $id => $value) {
+            $class = explode("_", $id);
+            $id = array_pop($class);
+            $class = implode("\\", $class);
+            //dd($id, $class);
+            echo $class::renderFrontend($value)->render();
+        }
     }
 }

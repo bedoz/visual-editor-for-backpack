@@ -5,7 +5,7 @@ Route::group([
     'middleware' => ['web', config('backpack.base.middleware_key', 'admin')],
     'namespace'  => 'Bedoz\VisualEditorForBackpack\app\Http\Controllers',
 ], function () {
-    Route::post('visualEditor/preview/{data}', 'VisualEditorController@preview')->name('visualEditor.preview');
+    Route::post('visualEditor/preview', 'VisualEditorController@preview')->name('visualEditor.preview');
 });
 
 Route::group([

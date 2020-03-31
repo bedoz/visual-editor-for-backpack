@@ -13,9 +13,9 @@ abstract class Block {
         return view('visual-editor-for-backpack::blocks.'.$class::$name.'.backend', compact('class', 'crud', 'entry', 'id', 'value'));
     }
 
-    static public function renderFrontend() {
+    static public function renderFrontend($value = '') {
         $class = get_called_class();
-        return view('visual-editor-for-backpack::blocks.'.$class::$name.'.frontend', compact('class'));
+        return view('visual-editor-for-backpack::blocks.'.$class::$name.'.frontend', compact('class', 'value'));
     }
 
     static public function pushStyle() {

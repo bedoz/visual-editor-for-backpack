@@ -2,6 +2,7 @@
     <label>{{ $field['label'] }}</label>
     @include('crud::inc.field_translatable_icon')
     <a href="javascript:;" class="btn btn-default visual-editor-preview">{{ trans('visual-editor-for-backpack::interface.preview') }}</a>
+    <div class="clear"></div>
 
     <input type="hidden"
            name="{{ $field['name'] }}"
@@ -77,8 +78,20 @@
         @foreach(config('visual-editor.blocks') as $block)
             {!! $block::pushStyle() !!}
         @endforeach
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css">
         <style>
-            .visual-editor-preview {float: right;}
+            .visual-editor-preview {float: right; margin-bottom: 10px;}
+            .clear {clear: both;}
+            .fancybox-slide--html .fancybox-content {
+                width: 100vw;
+                height: 100vh;
+            }
+            @media only screen and (min-width: 1024px) {
+                .fancybox-slide--html .fancybox-content {
+                    width: 80vw;
+                    height: 90vh;
+                }
+            }
         </style>
     @endpush
 
@@ -87,6 +100,7 @@
         @foreach(config('visual-editor.blocks') as $block)
             {!! $block::pushScripts() !!}
         @endforeach
+        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
         <script>
             $(document).ready(function () {
                 $("#visual_editor_add_block_button").click(function () {
@@ -141,6 +155,32 @@
                     window[block].beforeSort($me);
                     $me.insertAfter($me.parent().children(":eq("+ ($pos + 1) +")"));
                     window[block].afterSort($me);
+                });
+
+                $('a.visual-editor-preview').click(function(){
+                    var result = {};
+                    $('div.visual-editor-rows > div').each(function(){
+                        var id = $(this).data("id");
+                        var value = $("[name="+id+"]").val();
+                        result[id] = value;
+                    });
+                    $.ajax({
+                        url: '{{route('visualEditor.preview')}}',
+                        type: 'POST',
+                        data: {
+                            '_token': '<?php echo csrf_token(); ?>',
+                            'data': JSON.stringify(result)
+                        },
+                        success: function(data, textStatus, xhr) {
+                            $.fancybox.open({
+                                src  : '<div>' + data + '</div>',
+                                type : 'html'
+                            });
+                        },
+                        error: function(xhr, textStatus, errorThrown) {
+                            alert("An error occurred.");
+                        }
+                    });
                 });
             });
         </script>
