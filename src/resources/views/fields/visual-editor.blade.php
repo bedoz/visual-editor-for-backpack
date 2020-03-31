@@ -122,7 +122,7 @@
                 });
 
                 $("div.visual-editor-rows").on("click", "div.visual-editor-icons a.trash", function () {
-                    let $me = $(this).closest("[data-block]");
+                    const $me = $(this).closest("[data-block]");
                     window[$me.data("block")].destroy($me);
                     $me.remove();
                 });

@@ -13,6 +13,7 @@ class Text extends Block {
     }
 
     static public function pushScripts() {
+        $fieldName = self::fieldName();
         ?>
         <script src="<?php echo asset('packages/ckeditor/ckeditor.js'); ?>"></script>
         <script src="<?php echo asset('packages/ckeditor/adapters/jquery.js'); ?>"></script>
@@ -40,7 +41,11 @@ class Text extends Block {
             }
 
             this['<?php echo self::classSlug(); ?>'].init = function (element) {
-                element.find('textarea[name=VEBlockName]').attr("name", "<?php echo self::fieldName(); ?>");
+                if (element.data("id") === "VEBlockName") {
+                    element.find('textarea[name=VEBlockName]').attr("name", "<?php echo $fieldName; ?>");
+                    element.data("id", "<?php echo $fieldName; ?>").attr("data-id", "<?php echo $fieldName; ?>");
+                }
+
                 window['<?php echo self::classSlug(); ?>'].startCKEditor(element);
             }
 
