@@ -78,7 +78,6 @@
         @foreach(config('visual-editor.blocks') as $block)
             {!! $block::pushStyle() !!}
         @endforeach
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css">
         <style>
             .visual-editor-preview {float: right; margin-bottom: 10px;}
             .clear {clear: both;}
@@ -100,8 +99,17 @@
         @foreach(config('visual-editor.blocks') as $block)
             {!! $block::pushScripts() !!}
         @endforeach
-        <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
         <script>
+            if (typeof $.fancybox === 'undefined') {
+                var s = document.createElement( 'script' );
+                s.setAttribute( 'src', 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js' );
+                document.body.appendChild( s );
+                s = document.createElement( 'link' );
+                s.setAttribute( 'rel', 'stylesheet' );
+                s.setAttribute( 'href', 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css' );
+                document.body.appendChild( s );
+            }
+
             $(document).ready(function () {
                 $("#visual_editor_add_block_button").click(function () {
                     let block = $("select[name=visual_editor_templates]").val()

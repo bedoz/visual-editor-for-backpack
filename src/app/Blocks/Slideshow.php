@@ -78,8 +78,30 @@ class Slideshow extends Block {
     static public function pushScripts() {
         $fieldName = self::fieldName();
         ?>
-        <script src="<?php echo asset('packages/cropperjs/dist/cropper.min.js'); ?>"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/html5sortable/0.9.17/html5sortable.min.js" integrity="sha256-fdNI7V9EvWA6jnRNuFseI3IGOyju9F7Ds4q3CeyxtlM=" crossorigin="anonymous"></script>
+        <div id="SlideshowAddScripts"></div>
+        <script>
+            if (typeof $.fn.Slick === 'undefined') {
+                var s = document.createElement( 'script' );
+                s.setAttribute( 'src', 'https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js' );
+                document.body.appendChild( s );
+                s = document.createElement( 'link' );
+                s.setAttribute( 'rel', 'stylesheet' );
+                s.setAttribute( 'href', 'https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css' );
+                document.body.appendChild( s );
+                s = document.createElement( 'link' );
+                s.setAttribute( 'rel', 'stylesheet' );
+                s.setAttribute( 'href', 'https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css' );
+                document.body.appendChild( s );
+            }
+            if (typeof sortable === "undefined") {
+                document.write('<scr' + 'ipt src="https://cdnjs.cloudflare.com/ajax/libs/html5sortable/0.9.17/html5sortable.min.js"></scr' + 'ipt>');
+            }
+            if (typeof $.fn.cropper === 'undefined') {
+                var s = document.createElement( 'script' );
+                s.setAttribute( 'src', "<?php echo asset('packages/cropperjs/dist/cropper.min.js'); ?>" );
+                document.body.appendChild( s );
+            }
+        </script>
         <script>
             this['<?php echo self::classSlug(); ?>'] = {};
 
