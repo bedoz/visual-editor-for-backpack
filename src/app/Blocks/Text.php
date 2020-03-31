@@ -15,9 +15,16 @@ class Text extends Block {
     static public function pushScripts() {
         $fieldName = self::fieldName();
         ?>
-        <script src="<?php echo asset('packages/ckeditor/ckeditor.js'); ?>"></script>
-        <script src="<?php echo asset('packages/ckeditor/adapters/jquery.js'); ?>"></script>
         <script>
+            if (typeof $.fn.ckeditor === 'undefined') {
+                var s = document.createElement( 'script' );
+                s.setAttribute( 'src', "<?php echo asset('packages/ckeditor/ckeditor.js'); ?>" );
+                document.body.appendChild( s );
+                s = document.createElement( 'script' );
+                s.setAttribute( 'src', "<?php echo asset('packages/ckeditor/adapters/jquery.js'); ?>" );
+                document.body.appendChild( s );
+            }
+
             this['<?php echo self::classSlug(); ?>'] = {};
 
             this['<?php echo self::classSlug(); ?>'].startCKEditor = function (element) {
