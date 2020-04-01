@@ -12,8 +12,3 @@
         @endif
     </div>
 </div>
-<script>
-    $(document).ready(function(){
-        $('.slideshow').slick({});
-    });
-</script>

@@ -63,6 +63,8 @@ class Text extends Block {
                     CKEDITOR.instances[instanceName].destroy();
                 }
             }
+
+            this['<?php echo self::classSlug(); ?>'].onPreview = function (element) {}
         </script>
         <?php
     }

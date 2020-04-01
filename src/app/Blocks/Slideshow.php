@@ -424,6 +424,10 @@ class Slideshow extends Block {
             }
 
             this['<?php echo self::classSlug(); ?>'].destroy = function (element) {}
+
+            this['<?php echo self::classSlug(); ?>'].onPreview = function (element) {
+                element.find('.slideshow').slick({});
+            }
         </script>
         <?php
     }

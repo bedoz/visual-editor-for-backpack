@@ -91,6 +91,9 @@
                     height: 90vh;
                 }
             }
+            .slick-prev:before, .slick-next:before {
+                color: #000 !important;
+            }
         </style>
     @endpush
 
@@ -184,7 +187,14 @@
                         success: function(data, textStatus, xhr) {
                             $.fancybox.open({
                                 src  : '<div>' + data + '</div>',
-                                type : 'html'
+                                type : 'html',
+                                touch: false,
+                                afterShow : function() {
+                                    $("div.visual-editor-rows > [data-block]").each(function (index) {
+                                        $me = $(".fancybox-slide--html .fancybox-content > div:eq("+index+")");
+                                        window[$(this).data("block")].onPreview($me);
+                                    });
+                                }
                             });
                         },
                         error: function(xhr, textStatus, errorThrown) {
